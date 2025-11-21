@@ -1,0 +1,131 @@
+<robot name="semubot">
+
+  <!-- Base -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://semubot/urdf/movement_frame.stl" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- Omni-balls -->
+  <link name="omni_ball_1">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://semubot/urdf/omni_ball.stl" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="omni_ball_2">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://semubot/urdf/omni_ball.stl" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="omni_ball_3">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://semubot/urdf/omni_ball.stl" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="omni_ball_1_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="omni_ball_1"/>
+    <origin xyz="0.35 0.35 -0.08" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="50" velocity="1.0"/>
+  </joint>
+
+  <joint name="omni_ball_2_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="omni_ball_2"/>
+    <origin xyz="-0.35 0.35 -0.08" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="50" velocity="1.0"/>
+  </joint>
+
+  <joint name="omni_ball_3_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="omni_ball_3"/>
+    <origin xyz="0 -0.35 -0.08" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="50" velocity="1.0"/>
+  </joint>
+
+
+  <!-- Main Body -->
+  <link name="main_body">
+    <visual>
+      <geometry>
+        <mesh filename="package://semubot/urdf/body.stl" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="body_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="main_body"/>
+    <origin xyz="0 0 0.12" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Left Arm -->
+  <link name="left_arm">
+    <visual>
+      <geometry>
+        <mesh filename="package://semubot/urdf/left_hand.stl" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="left_arm_joint" type="revolute">
+    <parent link="main_body"/>
+    <child link="left_arm"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.57" upper="1.57" effort="10" velocity="1.0"/>
+  </joint>
+
+  <!-- Right Arm -->
+  <link name="right_arm">
+    <visual>
+      <geometry>
+        <mesh filename="package://semubot/urdf/right_hand.stl" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="right_arm_joint" type="revolute">
+    <parent link="main_body"/>
+    <child link="right_arm"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.57" upper="1.57" effort="10" velocity="1.0"/>
+  </joint>
+
+  <!-- Head -->
+  <link name="head">
+    <visual>
+      <geometry>
+        <mesh filename="package://semubot/urdf/head.stl" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="head_joint" type="revolute">
+    <parent link="main_body"/>
+    <child link="head"/>
+    <origin xyz="0 0 -0.08" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.57" upper="1.57" effort="10" velocity="1.0"/>
+  </joint>
+
+</robot>

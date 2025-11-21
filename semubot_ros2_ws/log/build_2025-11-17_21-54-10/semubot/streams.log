@@ -1,0 +1,55 @@
+[0.055s] Invoking command in '/home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/build/semubot': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/src/semubot -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot
+[0.489s] -- The C compiler identification is GNU 13.3.0
+[0.879s] -- The CXX compiler identification is GNU 13.3.0
+[0.998s] -- Detecting C compiler ABI info
+[1.699s] -- Detecting C compiler ABI info - done
+[1.796s] -- Check for working C compiler: /usr/bin/cc - skipped
+[1.797s] -- Detecting C compile features
+[1.804s] -- Detecting C compile features - done
+[1.863s] -- Detecting CXX compiler ABI info
+[2.786s] -- Detecting CXX compiler ABI info - done
+[2.877s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[2.881s] -- Detecting CXX compile features
+[2.885s] -- Detecting CXX compile features - done
+[2.912s] -- Found ament_cmake: 2.5.3 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[4.170s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[4.802s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[4.993s] -- Found ament_lint_auto: 0.17.1 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[5.502s] -- Configuring done (5.4s)
+[5.526s] -- Generating done (0.0s)
+[5.539s] -- Build files have been written to: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/build/semubot
+[5.564s] Invoked command in '/home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/build/semubot' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/src/semubot -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot
+[5.569s] Invoking command in '/home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/build/semubot': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/build/semubot -- -j8 -l8
+[5.745s] Invoked command in '/home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/build/semubot' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/build/semubot -- -j8 -l8
+[5.783s] Invoking command in '/home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/build/semubot': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/build/semubot
+[5.823s] -- Install configuration: ""
+[5.828s] -- Execute custom install script
+[5.830s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/urdf/body.stl
+[5.867s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/urdf/head.stl
+[5.902s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/urdf/left_hand.stl
+[5.949s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/urdf/movement_frame.stl
+[5.983s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/urdf/omni_ball.stl
+[6.028s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/urdf/right_hand.stl
+[6.065s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/urdf/semubot.urdf
+[6.101s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/launch/display_robot.launch.py
+[6.151s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/lib/semubot/cmd_vel_publisher.py
+[6.186s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/lib/semubot/cmd_vel_serial.py
+[6.236s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/lib/semubot/cmd_vel_to_joint_states.py
+[6.276s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/lib/semubot/odom_broadcaster.py
+[6.318s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/lib/semubot/cmd_ultrasonic_range_subscriber.py
+[6.357s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/ament_index/resource_index/package_run_dependencies/semubot
+[6.396s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/ament_index/resource_index/parent_prefix_path/semubot
+[6.438s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/environment/ament_prefix_path.sh
+[6.473s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/environment/ament_prefix_path.dsv
+[6.510s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/environment/path.sh
+[6.553s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/environment/path.dsv
+[6.587s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/local_setup.bash
+[6.640s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/local_setup.sh
+[6.676s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/local_setup.zsh
+[6.723s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/local_setup.dsv
+[6.767s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/package.dsv
+[6.804s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/ament_index/resource_index/packages/semubot
+[6.847s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/cmake/semubotConfig.cmake
+[6.887s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/cmake/semubotConfig-version.cmake
+[6.925s] -- Symlinking: /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/install/semubot/share/semubot/package.xml
+[6.971s] Invoked command in '/home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/build/semubot' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/semubot-laptop/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/build/semubot
