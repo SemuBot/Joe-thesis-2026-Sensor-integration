@@ -62,6 +62,7 @@ target_link_libraries(ultrasonic_data_publisher
 target_link_libraries(ultrasonic_data_publisher 
     pico_stdlib
     microros
+    #pico_cyw43_arch_none
 )
 
 # Add the standard include files to the build

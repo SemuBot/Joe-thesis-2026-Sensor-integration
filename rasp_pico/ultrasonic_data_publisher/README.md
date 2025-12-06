@@ -6,3 +6,8 @@
 3. cd build
 4. cmake ..
 5. make
+
+cp build/ultrasonic_data_publisher.uf2 /media/semubot-laptop/RP2350/
+
+Setup docker agent
+docker run -it --rm -v /dev:/dev --privileged --net=host microros/micro-ros-agent:kilted serial --dev /dev/ttyACM0 -b 115200

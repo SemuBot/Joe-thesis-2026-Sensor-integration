@@ -41,6 +41,9 @@
         "stdlib.h": "c",
         "int32.h": "c",
         "rmw_microros.h": "c",
-        "pico.h": "c"
+        "pico.h": "c",
+        "stdio.h": "c",
+        "pico_uart_transports.h": "c",
+        "cyw43_arch.h": "c"
     }
 }

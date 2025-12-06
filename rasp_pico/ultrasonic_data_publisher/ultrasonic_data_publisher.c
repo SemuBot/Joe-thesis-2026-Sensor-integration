@@ -6,16 +6,18 @@
 #include <std_msgs/msg/int32.h>
 #include <rmw_microros/rmw_microros.h>
 
+
 #include "pico/stdlib.h"
 #include "pico_uart_transports.h"
+//#include "pico/cyw43_arch.h"
 
 #define SPEED_OF_SOUND_CM_PER_US 0.0343f
 
 rcl_publisher_t publisher;
 std_msgs__msg__Int32 msg;
-const uint trig_pin = 4;
-const uint echo_pin = 5;
-const uint LED_PIN = 25;
+const uint trig_pin = 2;
+const uint echo_pin = 3;
+const uint LED_PIN = 0;
 
 /*
 Return pulse length in microseconds
@@ -61,10 +63,12 @@ void callback_function(rcl_timer_t *timer, int64_t last_call_time){
     msg.data = distance_cm;
 
     rcl_ret_t ret = rcl_publish(&publisher, &msg, NULL);
-
-    // Toggle led pin
-    gpio_xor_mask(1 << LED_PIN);
-    
+    /*
+    if(distance_cm < 10){
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
+    } else {
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
+    }*/
 }
 
 
@@ -79,9 +83,8 @@ int main()
 		pico_serial_transport_write,
 		pico_serial_transport_read
 	);
-
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
+    
+    //cyw43_arch_init();
 
     gpio_init(trig_pin);
     gpio_set_dir(trig_pin, GPIO_OUT);
@@ -109,11 +112,11 @@ int main()
 
     rclc_support_init(&support, 0, NULL, &allocator);
 
-    rclc_node_init_default(&node,"pico_node", "", &support);
+    rclc_node_init_default(&node,"ultrasonic_range_publisher", "", &support);
     rclc_publisher_init_default(
         &publisher, &node,
         ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32), 
-        "ultrasonic_publisher");
+        "cmd_range");
 
     rclc_timer_init_default(
         &timer,
@@ -125,5 +128,10 @@ int main()
     rclc_executor_add_timer(&executor, &timer);
 
     msg.data = 0;
+    while (true)
+    {
+        rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100));
+    }
+    return 0;
 
 }
