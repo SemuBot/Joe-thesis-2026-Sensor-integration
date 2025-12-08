@@ -11,3 +11,11 @@ cp build/ultrasonic_data_publisher.uf2 /media/semubot-laptop/RP2350/
 
 Setup docker agent
 docker run -it --rm -v /dev:/dev --privileged --net=host microros/micro-ros-agent:kilted serial --dev /dev/ttyACM0 -b 115200
+
+
+UART pins are defined in pico_uart_transports.h
+
+
+### Micro-ros agent serial command
+
+micro-ros-agent serial --dev /dev/ttyACM0 -b 115200

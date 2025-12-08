@@ -55,7 +55,7 @@ int main()
     uint8_t trig_pins[] = {TRIG_PIN_1, TRIG_PIN_2, TRIG_PIN_3};
     uint8_t echo_pins[] = {ECHO_PIN_1, ECHO_PIN_2, ECHO_PIN_3};
 
-    for(int i = 0; i < sizeof(trig_pins); i++){
+    for(int i = 0; i < NUMBER_OF_SENSORS; i++){
         gpio_init(trig_pins[i]);
         gpio_set_dir(trig_pins[i], GPIO_OUT);
 
@@ -102,6 +102,15 @@ int main()
     msg.data.data = malloc(sizeof(int32_t) * NUMBER_OF_SENSORS);
     msg.data.size = NUMBER_OF_SENSORS;
     msg.data.capacity = NUMBER_OF_SENSORS;
+
+    msg.layout.dim.data[0].label.data = "sensors";
+    msg.layout.dim.data[0].label.size = strlen("sensors");
+    msg.layout.dim.data[0].label.capacity = strlen("sensors");
+
+    msg.layout.dim.data[0].size = NUMBER_OF_SENSORS;
+    msg.layout.dim.data[0].stride = NUMBER_OF_SENSORS;
+
+    msg.layout.data_offset = 0;
 
     while (true)
     {
