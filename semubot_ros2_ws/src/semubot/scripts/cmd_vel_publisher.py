@@ -3,7 +3,7 @@ import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
 
-from std_msgs.msg import Int32
+from std_msgs.msg._int32_multi_array import Int32MultiArray
 
 class CmdVelPublisher(Node):
     def __init__(self):
@@ -11,12 +11,13 @@ class CmdVelPublisher(Node):
         self.publisher = self.create_publisher(Twist, 'cmd_vel', 10)
         #self.timer = self.create_timer(1.0, self.publish_cmd_vel)
 
-        self.subscription = self.create_subscription(Int32, "cmd_range", self.publish_cmd_vel, 10)
+
+        self.subscription = self.create_subscription(Int32MultiArray, "cmd_range", self.publish_cmd_vel, 10)
 
 
     def publish_cmd_vel(self, distance):
         msg = Twist()
-        if distance.data > 0 and distance.data < 10:
+        if distance.data.data[0] > 0 and distance.data.data[0] < 10:
             msg.linear.x = 0.0  # Move forward (backward in our case)
             msg.angular.z = 1.0  # No rotation
         else:
