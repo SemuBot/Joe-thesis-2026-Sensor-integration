@@ -92,7 +92,7 @@ int main()
     rclc_timer_init_default(
         &timer,
         &support,
-        RCL_MS_TO_NS(1000),
+        RCL_MS_TO_NS(200),
         callback_function);
 
     rclc_executor_init(&executor, &support.context, 1, &allocator);

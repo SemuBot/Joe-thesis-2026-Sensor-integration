@@ -7,4 +7,4 @@ cd build
 cmake ..
 make
 cd ..
-cp build/ultrasonic_publisher.uf2 /media/aleks/RP2350/
+cp build/ultrasonic_publisher.uf2 /media/semubot-laptop/RP2350/

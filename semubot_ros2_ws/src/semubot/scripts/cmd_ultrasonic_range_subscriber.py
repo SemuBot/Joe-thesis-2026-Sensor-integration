@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+NOT USED IN MAIN CODE
+"""
+
 import rclpy
 from rclpy.node import Node
 

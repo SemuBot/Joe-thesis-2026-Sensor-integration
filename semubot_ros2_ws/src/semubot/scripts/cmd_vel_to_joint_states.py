@@ -30,9 +30,9 @@ class CmdVelToJointStates(Node):
         omega = msg.angular.z  # Angular velocity around z axis
 
         # Update wheel positions based on cmd_vel (you can fine-tune this conversion)
-        self.wheel_positions['omni_ball_1_joint'] += (v + omega) * dt
-        self.wheel_positions['omni_ball_2_joint'] += (v - omega) * dt
-        self.wheel_positions['omni_ball_3_joint'] += (v * 0.5) * dt
+        self.wheel_positions['omni_ball_1_joint'] += 0
+        self.wheel_positions['omni_ball_2_joint'] += 0
+        self.wheel_positions['omni_ball_3_joint'] += 0
 
         # Create a JointState message to publish the new joint positions
         js = JointState()
