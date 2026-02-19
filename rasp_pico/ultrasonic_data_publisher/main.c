@@ -3,41 +3,14 @@
 #include <rcl/error_handling.h>
 #include <rclc/rclc.h>
 #include <rclc/executor.h>
-#include <std_msgs/msg/int32.h>
-#include <std_msgs/msg/int32_multi_array.h>
+#include <stdint.h>
 #include <rmw_microros/rmw_microros.h>
+#include <sensor_msgs/msg/range.h>
 
 #include "pico/stdlib.h"
 #include "pico_uart_transports.h"
-//#include "pico/cyw43_arch.h"
-#include "ultrasonic_data.h"
-
-#define NUMBER_OF_SENSORS 3
-
-rcl_publisher_t publisher;
-
-
-std_msgs__msg__Int32MultiArray msg;
-
-std_msgs__msg__Int32__Sequence msg_sequence;
-const uint LED_PIN = 0;
-
-
-void callback_function(rcl_timer_t *timer, int64_t last_call_time){
-
-    msg.data.data[0] = read_ultrasonic_cm(TRIG_PIN_1, ECHO_PIN_1);
-    msg.data.data[1] = read_ultrasonic_cm(TRIG_PIN_2, ECHO_PIN_2);
-    msg.data.data[2] = read_ultrasonic_cm(TRIG_PIN_3, ECHO_PIN_3);
-
-    rcl_publish(&publisher, &msg, NULL);
-    /*
-    if(distance_cm < 10){
-        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
-    } else {
-        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
-    }*/
-}
-
+#include "ultrasonic_range_calculation.h"
+#include "ultrasonic_publisher.h"
 
 
 int main()
@@ -51,7 +24,6 @@ int main()
 		pico_serial_transport_read
 	);
     
-    //cyw43_arch_init();
     uint8_t trig_pins[] = {TRIG_PIN_1, TRIG_PIN_2, TRIG_PIN_3};
     uint8_t echo_pins[] = {ECHO_PIN_1, ECHO_PIN_2, ECHO_PIN_3};
 
@@ -68,7 +40,7 @@ int main()
     rclc_executor_t executor;
 
     rcl_timer_t timer;
-    const int timeout_ms = 1000;
+    const int timeout_ms = 5000;
     const uint8_t attempts = 120;
 
     rcl_ret_t ret = rmw_uros_ping_agent(timeout_ms, attempts);
@@ -84,10 +56,6 @@ int main()
     rclc_support_init(&support, 0, NULL, &allocator);
 
     rclc_node_init_default(&node,"ultrasonic_range_publisher", "", &support);
-    rclc_publisher_init_default(
-        &publisher, &node,
-        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32MultiArray), 
-        "cmd_range");
 
     rclc_timer_init_default(
         &timer,
@@ -98,25 +66,13 @@ int main()
     rclc_executor_init(&executor, &support.context, 1, &allocator);
     rclc_executor_add_timer(&executor, &timer);
     
-    std_msgs__msg__Int32MultiArray__init(&msg);
-    msg.data.data = malloc(sizeof(int32_t) * NUMBER_OF_SENSORS);
-    msg.data.size = NUMBER_OF_SENSORS;
-    msg.data.capacity = NUMBER_OF_SENSORS;
-
-    msg.layout.dim.data[0].label.data = "sensors";
-    msg.layout.dim.data[0].label.size = strlen("sensors");
-    msg.layout.dim.data[0].label.capacity = strlen("sensors");
-
-    msg.layout.dim.data[0].size = NUMBER_OF_SENSORS;
-    msg.layout.dim.data[0].stride = NUMBER_OF_SENSORS;
-
-    msg.layout.data_offset = 0;
-
+    create_range_publishers(&node);
+    
     while (true)
     {
         rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100));
     }
-    std_msgs__msg__Int32MultiArray__fini(&msg);
+    
     return 0;
 
 }

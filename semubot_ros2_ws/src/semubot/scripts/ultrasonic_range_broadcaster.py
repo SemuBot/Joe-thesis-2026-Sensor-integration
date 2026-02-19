@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 
-"""
-NOT USED IN MAIN CODE
-"""
-
 import rclpy
 from rclpy.node import Node
 
-from std_msgs.msg import Int32
+from sensor_msgs.msg import Range
 
-class CmdRangeSubscriber(Node):
+class UltrasonicRangeBroadcaster(Node):
     
     def __init__(self):
         super().__init__("ultrasonic_range_subscriber")

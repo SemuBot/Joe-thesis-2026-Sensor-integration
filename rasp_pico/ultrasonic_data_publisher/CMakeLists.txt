@@ -15,13 +15,16 @@ if(WIN32)
 else()
     set(USERHOME $ENV{HOME})
 endif()
+
 set(sdkVersion 2.2.0)
 set(toolchainVersion 14_2_Rel1)
 set(picotoolVersion 2.2.0-a4)
 set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
+
 if (EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
+
 # ====================================================================================
 set(PICO_BOARD pico2_w CACHE STRING "Board type")
 
@@ -35,11 +38,17 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-link_directories(libmicroros)
+add_library(microros STATIC IMPORTED)
+set_target_properties(microros PROPERTIES
+    IMPORTED_LOCATION ${CMAKE_CURRENT_LIST_DIR}/libmicroros/libmicroros.a
+    INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_LIST_DIR}/libmicroros/include
+)
+
 add_executable(ultrasonic_publisher 
-    ultrasonic_data.c
-    ultrasonic_publisher.c 
-    pico_uart_transport.c
+    src/ultrasonic_range_calculation.c
+    src/ultrasonic_publisher.c 
+    src/pico_uart_transport.c
+    main.c
 )
 
 pico_set_program_name(ultrasonic_publisher "ultrasonic_publisher")
@@ -51,26 +60,25 @@ SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -ffunction-sections -fdata-sections")
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_usb(ultrasonic_publisher 1)
 pico_enable_stdio_uart(ultrasonic_publisher 0)
-add_compile_definitions(PICO_UART_ENABLE_CRLF_SUPPORT=0)
-add_compile_definitions(PICO_STDIO_ENABLE_CRLF_SUPPORT=0)
-add_compile_definitions(PICO_STDIO_DEFAULT_CRLF=0)
 
-# Add the standard library to the build
-target_link_libraries(ultrasonic_publisher
-        pico_stdlib)
-
-# Add any user requested libraries
-target_link_libraries(ultrasonic_publisher 
-    pico_stdlib
-    microros
-    #pico_cyw43_arch_none
+add_compile_definitions(
+    PICO_UART_ENABLE_CRLF_SUPPORT=0
+    PICO_STDIO_ENABLE_CRLF_SUPPORT=0
+    PICO_STDIO_DEFAULT_CRLF=0
 )
 
 # Add the standard include files to the build
 target_include_directories(ultrasonic_publisher PUBLIC
-        libmicroros/include
-        ${CMAKE_CURRENT_LIST_DIR}
+        include
 )
+
+# Link libraries
+target_link_libraries(ultrasonic_publisher 
+    pico_stdlib
+    microros
+)
+
+
 
 pico_add_extra_outputs(ultrasonic_publisher)
 
