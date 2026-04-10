@@ -165,7 +165,7 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 # LDFLAGS
 #######################################
 # link script
-LDSCRIPT = STM32F303RETx_FLASH.ld
+LDSCRIPT = STM32F303RETX_FLASH.ld
 
 # libraries
 LIBS = -lc -lm -lnosys 
