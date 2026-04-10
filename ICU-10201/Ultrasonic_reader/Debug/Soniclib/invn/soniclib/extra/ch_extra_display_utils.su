@@ -1,0 +1,3 @@
+../Soniclib/invn/soniclib/extra/ch_extra_display_utils.c:48:13:is_part_number_icu	16	static
+../Soniclib/invn/soniclib/extra/ch_extra_display_utils.c:54:6:ch_extra_display_init_info	104	static
+../Soniclib/invn/soniclib/extra/ch_extra_display_utils.c:100:9:ch_extra_display_config_info	80	static

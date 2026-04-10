@@ -1,0 +1,11 @@
+../Soniclib/invn/soniclib/ch_log.c:48:20:print	1
+../Soniclib/invn/soniclib/ch_log.c:53:41:print_to_buf	4
+../Soniclib/invn/soniclib/ch_log.c:77:20:add_header	4
+../Soniclib/invn/soniclib/ch_log.c:105:20:add_eof	2
+../Soniclib/invn/soniclib/ch_log.c:116:35:ch_log_printf	1
+../Soniclib/invn/soniclib/ch_log.c:126:35:ch_log_printf_eol	1
+../Soniclib/invn/soniclib/ch_log.c:139:6:ch_log_prefix_printf	1
+../Soniclib/invn/soniclib/ch_log.c:156:6:ch_log_prefix_start	1
+../Soniclib/invn/soniclib/ch_log.c:168:35:ch_log_start	1
+../Soniclib/invn/soniclib/ch_log.c:178:35:ch_log_msg	1
+../Soniclib/invn/soniclib/ch_log.c:187:6:ch_log_end	1

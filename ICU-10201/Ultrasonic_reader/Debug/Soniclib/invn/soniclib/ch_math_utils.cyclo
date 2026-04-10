@@ -1,0 +1,4 @@
+../Soniclib/invn/soniclib/ch_math_utils.c:16:9:FP_sqrt	3
+../Soniclib/invn/soniclib/ch_math_utils.c:34:9:FP_log2	6
+../Soniclib/invn/soniclib/ch_math_utils.c:64:9:FP_log	1
+../Soniclib/invn/soniclib/ch_math_utils.c:84:9:sqrt_int32	3
