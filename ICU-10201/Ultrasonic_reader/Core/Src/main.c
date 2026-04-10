@@ -18,96 +18,177 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include <stdio.h>
-#include <string.h>
+#include "cmsis_os.h"
+#include "dma.h"
+#include "spi.h"
+#include "usart.h"
+#include "gpio.h"
 
-#include <spi.h>
-#include <tim.h>
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 
-#include "obstacle_detection.h"
-#include <GPIO.h>
-#include <uart.h>
-#include "system_clock.h"
-#include "sensor.h"
+/* USER CODE END Includes */
 
-#define SCAN_SAMPLES 200
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
 
-void reset_interrupt(void);
+/* USER CODE END PTD */
 
-static uint16_t amp_data[SCAN_SAMPLES];
-extern ch_dev_t chirp_devices[NUMBER_OF_SENSORS];
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
 
+/* USER CODE END PD */
 
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
 
+/* USER CODE END PM */
 
+/* Private variables ---------------------------------------------------------*/
 
+/* USER CODE BEGIN PV */
 
+/* USER CODE END PV */
 
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+void MX_FREERTOS_Init(void);
+/* USER CODE BEGIN PFP */
 
+/* USER CODE END PFP */
 
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
+
+/**
+  * @brief  The application entry point.
+  * @retval int
+  */
 int main(void)
 {
-    HAL_Init();
-    SystemClock_Config();
-    MX_GPIO_Init();
-    MX_SPI2_Init();
-    MX_USART2_UART_Init();
-    //MX_TIM8_Init();
-    //HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_1);
 
-    char buf[512];
+  /* USER CODE BEGIN 1 */
 
-    sensor_group_init();
-    for (int sensor = 0; sensor < NUMBER_OF_SENSORS; sensor++){
-    	sensor_init(&chirp_devices[sensor], sensor);
-    }
+  /* USER CODE END 1 */
 
-    reset_interrupt();
+  /* MCU Configuration--------------------------------------------------------*/
 
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
 
+  /* USER CODE BEGIN Init */
 
-    while (1) {
-        for (uint8_t sensor = 0; sensor < NUMBER_OF_SENSORS; sensor++) {
-            for (uint8_t meas_num = 0; meas_num < 2; meas_num++) {
-                ch_trigger(&chirp_devices[sensor]);
+  /* USER CODE END Init */
 
-                uint8_t sensor_bit = (1 << sensor);
-                data_ready &= ~sensor_bit;  // clear only this sensor's bit, not all
-                uint32_t start = HAL_GetTick();
-                while (!(data_ready & sensor_bit) && ((HAL_GetTick() - start) < 1000)) __WFI();
+  /* Configure the system clock */
+  SystemClock_Config();
 
-                if (data_ready & sensor_bit) {
-                    data_ready &= ~sensor_bit;
-                    uint8_t last_meas = ch_meas_get_last_num(&chirp_devices[sensor]);
-                    uint8_t n = icu_gpt_algo_get_num_targets(&chirp_devices[sensor]);
-                    sprintf(buf, "S%u meas=%u targets=%u\r\n", sensor, last_meas, n);
-                    uart_print(buf);
-                    for (uint8_t i = 0; i < n; i++) {
-                        float r = icu_gpt_algo_get_target_range(&chirp_devices[sensor], i, CH_RANGE_ECHO_ONE_WAY) / 32.0f;
-                        if (r > 5000.0f) continue;
-                        uint16_t a = icu_gpt_algo_get_target_amplitude(&chirp_devices[sensor], i);
-                        sprintf(buf, "  t%u mm=%.0f amp=%u\r\n", i, r, a);
-                        uart_print(buf);
-                    }
-                } else {
-                    sprintf(buf, "S%u meas=%u timeout\r\n", sensor, meas_num);
-                    uart_print(buf);
-                    reset_interrupt();
-                }
-            }
-            HAL_Delay(20);
-        }
-        HAL_Delay(180);
-    }
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_USART2_UART_Init();
+  MX_SPI2_Init();
+  /* USER CODE BEGIN 2 */
+
+  /* USER CODE END 2 */
+
+  /* Init scheduler */
+  osKernelInitialize();
+
+  /* Call init function for freertos objects (in cmsis_os2.c) */
+  MX_FREERTOS_Init();
+
+  /* Start scheduler */
+  osKernelStart();
+
+  /* We should never get here as control is now taken by the scheduler */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
 }
 
-void reset_interrupt(void){
-    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_11);
-    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_6);
-    HAL_NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
-    HAL_NVIC_ClearPendingIRQ(EXTI9_5_IRQn);
-    HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
-    HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+/**
+  * @brief System Clock Configuration
+  * @retval None
+  */
+void SystemClock_Config(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+  RCC_OscInitStruct.PLL.PREDIV = RCC_PREDIV_DIV1;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Initializes the CPU, AHB and APB buses clocks
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
+  PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+/* USER CODE BEGIN 4 */
+
+/* USER CODE END 4 */
+
+/**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM1 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM1) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
 }
 
 /**
