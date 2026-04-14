@@ -4,7 +4,7 @@
 # easier to build again.
 rm -rf build/*
 
-source /opt/ros/jazzy/setup.bash
+source ~/.bashrc
 colcon build --symlink-install
 source install/setup.bash
 

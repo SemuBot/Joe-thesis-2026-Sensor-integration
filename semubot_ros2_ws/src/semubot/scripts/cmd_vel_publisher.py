@@ -17,13 +17,16 @@ class CmdVelPublisher(Node):
 
     def publish_cmd_vel(self, distance):
         msg = Twist()
-        if distance.data.data[0] > 0 and distance.data.data[0] < 10:
+        """
+        if distance.data[0] > 0 and distance.data[0] < 10:
             msg.linear.x = 0.0  # Move forward (backward in our case)
             msg.angular.z = 1.0  # No rotation
         else:
             msg.linear.x = -0.5  # Move forward (backward in our case)
             msg.angular.z = 0.0  # No rotation
-
+        """
+        msg.linear.x = -0.5  # Move forward (backward in our case)
+        msg.angular.z = 0.0  # No rotation        
         self.publisher.publish(msg)
         self.get_logger().info(
             f"Publishing: linear.x={msg.linear.x}, angular.z={msg.angular.z}, distance={distance.data}"
