@@ -1,0 +1,126 @@
+/*
+ * measurement_config.c
+ * Sensor: ICU-10201, Firmware: icu_gpt 1.9.0
+ * Based on TDK defaults.json (ODR=4, length=37376)
+ * stop_index extended to 320 to search full receive window
+ */
+
+#include "measurement_config.h"
+
+measurement_queue_t measurement_config_queue = {
+    .intconfig    = 0,
+    .meas_start   = 0,
+    .meas_stop    = 1,
+    .current_meas = 0,
+    .trigsrc      = 0,
+    .reserved     = 0,
+    .meas = {
+        {
+            .trx_inst = {
+				{ .cmd_config = 33569, .length = 512   },
+				{ .cmd_config = 14370, .length = 128   },
+				{ .cmd_config = 42,    .length = 43136 },
+                { .cmd_config = 3,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+            },
+            .meas_period = 0,
+            .odr         = CH_ODR_FREQ_DIV_8,
+            .meas_flags  = 0,
+        },
+        {
+            .trx_inst = {
+				{ .cmd_config = 33569, .length = 512   },
+				{ .cmd_config = 14370, .length = 128   },
+				{ .cmd_config = 42,    .length = 43136 },
+                { .cmd_config = 3,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+                { .cmd_config = 0,     .length = 0     },
+            },
+            .meas_period = 0,
+            .odr         = CH_ODR_FREQ_DIV_8,
+            .meas_flags  = 0,
+        },
+    },
+};
+
+InvnAlgoRangeFinderConfig measurement_config_cfg = {
+    .meas_cfg = {
+        {
+            .ringdown_cancel_samples = 60,
+            .static_target_samples   = 0,
+            .thresholds = {
+            		.stop_index = { 0,  14,  20,  26,  32,  38,  44, 50 },
+            		.threshold  = { 40000, 40000, 80, 80, 80, 80, 80, 80 },
+            },
+            .num_ranges        = 5,
+            .iq_output_format  = 0,
+            .filter_update_modulo = 1,
+            .reserved          = 0,
+        },
+        {
+            .ringdown_cancel_samples = 60,
+            .static_target_samples   = 0,
+            .thresholds = {
+            		.stop_index = { 0,  50,  80,  94,  108,  122,  136, 150 },
+            		.threshold  = { 40000, 40000, 40, 40, 40, 40, 40, 40 },
+            },
+            .num_ranges        = 5,
+            .iq_output_format  = 0,
+            .filter_update_modulo = 1,
+            .reserved          = 0,
+        },
+    },
+};

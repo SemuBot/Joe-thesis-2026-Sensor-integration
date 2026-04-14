@@ -1,0 +1,4 @@
+../Common/Src/sensor.c:23:6:sensor_group_init	5
+../Common/Src/sensor.c:68:6:sensor_init	8
+../Common/Src/sensor.c:204:6:HAL_GPIO_EXTI_Callback	3
+../Common/Src/sensor.c:220:6:io_int_callback	2

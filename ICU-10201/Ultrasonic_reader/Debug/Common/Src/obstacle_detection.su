@@ -1,0 +1,7 @@
+../Common/Src/obstacle_detection.c:23:13:uart_print	16	static
+../Common/Src/obstacle_detection.c:29:6:obstacle_calibrate	240	static,ignoring_inline_asm
+../Common/Src/obstacle_detection.c:83:19:obstacle_check	56	static
+../Common/Src/obstacle_detection.c:121:6:obstacle_smooth_update	16	static
+../Common/Src/obstacle_detection.c:129:6:obstacle_smooth_get	32	static
+../Common/Src/obstacle_detection.c:141:6:obstacle_smooth_reset	4	static
+../Common/Src/obstacle_detection.c:147:9:obstacle_smooth_get_count	4	static

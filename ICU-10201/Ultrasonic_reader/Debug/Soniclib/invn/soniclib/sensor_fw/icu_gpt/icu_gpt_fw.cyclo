@@ -1,0 +1,3 @@
+../Soniclib/invn/soniclib/sensor_fw/icu_gpt/icu_gpt_fw.c:30:10:get_icu_gpt_fw_ram_init_addr	1
+../Soniclib/invn/soniclib/sensor_fw/icu_gpt/icu_gpt_fw.c:31:10:get_icu_gpt_fw_ram_init_size	1
+../Soniclib/invn/soniclib/sensor_fw/icu_gpt/icu_gpt_fw.c:70:23:get_ram_icu_gpt_init_ptr	1

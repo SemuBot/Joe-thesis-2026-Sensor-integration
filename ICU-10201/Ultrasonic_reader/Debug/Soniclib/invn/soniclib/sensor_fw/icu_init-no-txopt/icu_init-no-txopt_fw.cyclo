@@ -1,0 +1,3 @@
+../Soniclib/invn/soniclib/sensor_fw/icu_init-no-txopt/icu_init-no-txopt_fw.c:30:10:get_icu_init_no_txopt_fw_ram_init_addr	1
+../Soniclib/invn/soniclib/sensor_fw/icu_init-no-txopt/icu_init-no-txopt_fw.c:31:10:get_icu_init_no_txopt_fw_ram_init_size	1
+../Soniclib/invn/soniclib/sensor_fw/icu_init-no-txopt/icu_init-no-txopt_fw.c:69:23:get_ram_icu_init_no_txopt_init_ptr	1
