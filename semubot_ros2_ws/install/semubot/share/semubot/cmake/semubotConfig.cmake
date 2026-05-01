@@ -1,1 +1,0 @@
-/home/aleks/Joe-thesis-2026-Sensor-integration/semubot_ros2_ws/build/semubot/ament_cmake_core/semubotConfig.cmake

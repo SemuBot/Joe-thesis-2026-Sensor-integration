@@ -38,7 +38,6 @@ BUILD_DIR = build
 C_SOURCES =  \
 Core/Src/main.c \
 Core/Src/gpio.c \
-Core/Src/freertos.c \
 Core/Src/dma.c \
 Core/Src/spi.c \
 Core/Src/usart.c \
@@ -65,18 +64,24 @@ Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_tim_ex.c \
 Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_uart.c \
 Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_uart_ex.c \
 Core/Src/system_stm32f3xx.c \
-Middlewares/Third_Party/FreeRTOS/Source/croutine.c \
-Middlewares/Third_Party/FreeRTOS/Source/event_groups.c \
-Middlewares/Third_Party/FreeRTOS/Source/list.c \
-Middlewares/Third_Party/FreeRTOS/Source/queue.c \
-Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c \
-Middlewares/Third_Party/FreeRTOS/Source/tasks.c \
-Middlewares/Third_Party/FreeRTOS/Source/timers.c \
-Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c \
-Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
-Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c \
 Core/Src/sysmem.c \
-Core/Src/syscalls.c  
+Core/Src/syscalls.c  \
+Common/Src/measurement_config.c \
+Common/Src/obstacle_detection.c \
+Common/Src/sensor.c \
+Soniclib/invn/soniclib/ch_rangefinder.c \
+Soniclib/invn/soniclib/ch_driver.c \
+Soniclib/invn/soniclib/ch_common.c \
+Soniclib/invn/soniclib/ch_api.c \
+Soniclib/invn/soniclib/ch_log.c \
+Soniclib/invn/soniclib/ch_math_utils.c \
+Soniclib/invn/soniclib/sensor_fw/icu_gpt/icu_gpt.c \
+Soniclib/invn/soniclib/sensor_fw/icu_gpt/icu_gpt_fw.c \
+Soniclib/invn/soniclib/sensor_fw/icu_gpt/_icu_gpt_plugin_version.c \
+Soniclib/invn/soniclib/sensor_fw/icu_init/icu_init.c \
+Soniclib/invn/soniclib/sensor_fw/icu_init/icu_init_fw.c \
+Soniclib/invn/soniclib/sensor_fw/icu_init/_icu_init_plugin_version.c \
+bsp/chirp_stm32.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -140,11 +145,16 @@ C_INCLUDES =  \
 -ICore/Inc \
 -IDrivers/STM32F3xx_HAL_Driver/Inc/Legacy \
 -IDrivers/STM32F3xx_HAL_Driver/Inc \
--IMiddlewares/Third_Party/FreeRTOS/Source/include \
--IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \
--IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 -IDrivers/CMSIS/Device/ST/STM32F3xx/Include \
--IDrivers/CMSIS/Include
+-IDrivers/CMSIS/Include \
+-ICommon/Inc \
+-Ibsp \
+-ISoniclib \
+-ISoniclib/invn \
+-ISoniclib/invn/soniclib \
+-ISoniclib/invn/soniclib/details \
+-ISoniclib/invn/soniclib/sensor_fw/icu_gpt \
+-ISoniclib/invn/icu_interface
 
 
 # compile gcc flags
@@ -182,12 +192,11 @@ LDFLAGS += micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/libmi
 C_INCLUDES += -Imicro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include
 
 # Add micro-ROS utils
-C_SOURCES += micro_ros_stm32cubemx_utils/extra_sources/custom_memory_manager.c
-C_SOURCES += micro_ros_stm32cubemx_utils/extra_sources/microros_allocators.c
+C_SOURCES += Core/Src/microros_allocators.c
 C_SOURCES += micro_ros_stm32cubemx_utils/extra_sources/microros_time.c
 
 # Set here the custom transport implementation
-C_SOURCES += micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c
+C_SOURCES += Core/Src/dma_transport.c
 
 print_cflags:
 	@echo $(CFLAGS)

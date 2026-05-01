@@ -14,9 +14,12 @@ static void int1_dir_in(ch_dev_t *dev_ptr) {
     if (dev_ptr->io_index == 0) {
         g.Pin = GPIO_PIN_11;
         HAL_GPIO_Init(GPIOA, &g);
-    } else {
+    } else if (dev_ptr->io_index == 1) {
         g.Pin = GPIO_PIN_6;
         HAL_GPIO_Init(GPIOA, &g);
+    } else {
+        g.Pin = GPIO_PIN_2;
+        HAL_GPIO_Init(GPIOB, &g);
     }
 }
 
@@ -28,9 +31,12 @@ static void int1_dir_out(ch_dev_t *dev_ptr) {
     if (dev_ptr->io_index == 0) {
         g.Pin = GPIO_PIN_11;
         HAL_GPIO_Init(GPIOA, &g);
-    } else {
+    } else if (dev_ptr->io_index == 1) {
         g.Pin = GPIO_PIN_6;
         HAL_GPIO_Init(GPIOA, &g);
+    } else {
+        g.Pin = GPIO_PIN_2;
+        HAL_GPIO_Init(GPIOB, &g);
     }
 }
 
@@ -50,49 +56,61 @@ void chbsp_group_set_int1_dir_out(ch_group_t *grp) {
 void chbsp_int1_clear(ch_dev_t *dev_ptr) {
     if (dev_ptr->io_index == 0)
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
-    else
+    else if (dev_ptr->io_index == 1)
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+    else
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_RESET);
 }
 
 void chbsp_group_int1_clear(ch_group_t *grp) {
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,  GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2,  GPIO_PIN_RESET);
 }
 
 void chbsp_int1_set(ch_dev_t *dev_ptr) {
     if (dev_ptr->io_index == 0)
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET);
-    else
+    else if (dev_ptr->io_index == 1)
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+    else
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET);
 }
 
 void chbsp_group_int1_set(ch_group_t *grp) {
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET);
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,  GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2,  GPIO_PIN_SET);
 }
 
 void chbsp_int1_interrupt_enable(ch_dev_t *dev_ptr) {
     if (dev_ptr->io_index == 0)
         HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
-    else
+    else if (dev_ptr->io_index == 1)
         HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+    else
+        HAL_NVIC_EnableIRQ(EXTI2_TSC_IRQn);
 }
 
 void chbsp_group_int1_interrupt_enable(ch_group_t *grp) {
     HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
     HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+    HAL_NVIC_EnableIRQ(EXTI2_TSC_IRQn);
 }
 
 void chbsp_int1_interrupt_disable(ch_dev_t *dev_ptr) {
     if (dev_ptr->io_index == 0)
         HAL_NVIC_DisableIRQ(EXTI15_10_IRQn);
-    else
+    else if (dev_ptr->io_index == 1)
         HAL_NVIC_DisableIRQ(EXTI9_5_IRQn);
+    else
+        HAL_NVIC_DisableIRQ(EXTI2_TSC_IRQn);
 }
 
 void chbsp_group_int1_interrupt_disable(ch_group_t *grp) {
     HAL_NVIC_DisableIRQ(EXTI15_10_IRQn);
     HAL_NVIC_DisableIRQ(EXTI9_5_IRQn);
+    HAL_NVIC_DisableIRQ(EXTI2_TSC_IRQn);
 }
 
 void chbsp_delay_ms(uint32_t ms) { HAL_Delay(ms); }
@@ -121,18 +139,24 @@ void chbsp_event_wait_setup(uint32_t event_mask)
 
 void chbsp_spi_cs_on(ch_dev_t *dev_ptr)
 {
-    if (dev_ptr->io_index == 0)
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);  // CS0 = PA12
-    else
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);   // CS1 = PA7
+	if (dev_ptr->io_index == 0)
+	    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);	// CS0 = PA12
+	else if (dev_ptr->io_index == 1)
+	    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);	// CS1 = PA7
+	else
+	    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);	// CS2 = PB1
 }
+
+
 
 void chbsp_spi_cs_off(ch_dev_t *dev_ptr)
 {
     if (dev_ptr->io_index == 0)
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);    // CS0 high
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET); 	// CS 0 - HIGH
+    else if (dev_ptr->io_index == 1)
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);		// CS 1 - HIGH
     else
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);     // CS1 high
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);		// CS 2 - HIGH
 }
 
 int chbsp_spi_write(ch_dev_t *dev_ptr, const uint8_t *data, uint16_t num_bytes) {

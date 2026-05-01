@@ -7,10 +7,11 @@
 
 #include "measurement_config.h"
 
+
 measurement_queue_t measurement_config_queue = {
     .intconfig    = 0,
     .meas_start   = 0,
-    .meas_stop    = 1,
+    .meas_stop    = MEAS_STOP,
     .current_meas = 0,
     .trigsrc      = 0,
     .reserved     = 0,

@@ -7,7 +7,7 @@ extern "C" {
 
 #define INCLUDE_SHASTA_SUPPORT
 
-#define CHIRP_MAX_NUM_SENSORS  2
+#define CHIRP_MAX_NUM_SENSORS  3
 #define CHIRP_NUM_BUSES        1
 
 #define CHIRP_SENSOR_INT_PIN   1

@@ -27,6 +27,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include <std_msgs/msg/string.h>
 
 /* USER CODE BEGIN Includes */
 
@@ -34,15 +35,8 @@ extern "C" {
 
 extern UART_HandleTypeDef huart2;
 
-/* USER CODE BEGIN Private defines */
-
-/* USER CODE END Private defines */
-
 void MX_USART2_UART_Init(void);
-
-/* USER CODE BEGIN Prototypes */
-
-/* USER CODE END Prototypes */
+void uart_print(rcl_publisher_t *pub, std_msgs__msg__String *msg, const char *text);
 
 #ifdef __cplusplus
 }

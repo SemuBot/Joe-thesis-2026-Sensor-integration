@@ -13,11 +13,9 @@
 #include "measurement_config.h"
 #include "obstacle_detection.h"
 
-#define NUMBER_OF_SENSORS 2
 
-extern volatile ch_interrupt_type_t last_int_type;
-extern volatile uint32_t irq_count;
-extern volatile uint32_t data_irq_count;
+#define NUMBER_OF_SENSORS 3
+
 extern volatile uint8_t data_ready;
 
 extern ch_group_t chirp_group;
@@ -29,5 +27,7 @@ void sensor_init(ch_dev_t *dev, uint8_t io_index);
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 void io_int_callback(ch_group_t *grp_ptr, uint8_t io_index, ch_interrupt_type_t int_type);
+
+void reset_interrupt(void);
 
 #endif

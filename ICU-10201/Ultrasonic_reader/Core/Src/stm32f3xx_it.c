@@ -219,5 +219,25 @@ void USART2_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+void EXTI15_10_IRQHandler(void)
+{
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
+}
+
+void EXTI9_5_IRQHandler(void)
+{
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_6);
+}
+
+void EXTI2_TSC_IRQHandler(void)
+{
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);
+}
+
+void SVC_Handler(void) {}
+void PendSV_Handler(void) {}
+void SysTick_Handler(void) { HAL_IncTick(); }
 
 /* USER CODE END 1 */
+
+

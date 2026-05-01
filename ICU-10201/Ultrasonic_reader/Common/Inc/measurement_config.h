@@ -8,12 +8,8 @@
 #ifndef INC_MEASUREMENT_CONFIG_H_
 #define INC_MEASUREMENT_CONFIG_H_
 
-/*
- * measurement_config.c
- *
- *  Created on: Mar 7, 2026
- *      Author: aleks
- */
+#define MEAS_STOP 1
+#define NUM_MEAS  (MEAS_STOP + 1)
 
 #include <invn/icu_interface/shasta_external_regs.h>
 #include <invn/icu_interface/ch-rangefinder/structs.h>  // algorithm specific definitions

@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "usart.h"
+#include <std_msgs/msg/string.h>
 
 /* USER CODE BEGIN 0 */
 
@@ -155,6 +156,8 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
   }
 }
 
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */
+void uart_print(rcl_publisher_t *pub, std_msgs__msg__String *msg, const char *text)
+{
+    rosidl_runtime_c__String__assign(&msg->data, text);
+    rcl_publish(pub, msg, NULL);
+}

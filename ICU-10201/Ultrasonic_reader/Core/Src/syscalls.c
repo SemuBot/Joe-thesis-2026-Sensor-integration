@@ -32,13 +32,15 @@
 
 
 /* Variables */
+extern int errno;
 extern int __io_putchar(int ch) __attribute__((weak));
 extern int __io_getchar(void) __attribute__((weak));
-
 
 char *__env[1] = { 0 };
 char **environ = __env;
 
+extern char _estack;
+extern char _Min_Stack_Size;
 
 /* Functions */
 void initialise_monitor_handles()
@@ -87,6 +89,27 @@ __attribute__((weak)) int _write(int file, char *ptr, int len)
     __io_putchar(*ptr++);
   }
   return len;
+}
+
+caddr_t _sbrk(int incr) {
+    extern char __heap_start__ asm("end");  // Defined by the linker.
+    static char *heap_end;
+    char *prev_heap_end;
+
+    if (heap_end == NULL) heap_end = &__heap_start__;
+
+    prev_heap_end = heap_end;
+
+    if (heap_end + incr > &_estack - _Min_Stack_Size) {
+    		__asm("BKPT #0\n");
+        errno = ENOMEM;
+        return (caddr_t)-1;
+
+    }
+
+    heap_end += incr;
+    return (caddr_t)prev_heap_end;
+
 }
 
 int _close(int file)
