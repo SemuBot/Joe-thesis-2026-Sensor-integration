@@ -1,0 +1,63 @@
+- name: Setup micro-ROS Agent
+  hosts: localhost
+  connection: local
+  vars:
+    ros_distro: jazzy
+    workspace: "{{ ansible_env.HOME }}/micro-ros_ws"
+
+  tasks:
+    - name: Source ROS 2 and create workspace directory
+      file:
+        path: "{{ workspace }}/src"
+        state: directory
+
+    - name: Clone micro_ros_setup
+      git:
+        repo: "https://github.com/micro-ROS/micro_ros_setup.git"
+        dest: "{{ workspace }}/src/micro_ros_setup"
+        version: "{{ ros_distro }}"
+
+    - name: Update rosdep
+      command: rosdep update
+      changed_when: false
+
+    - name: Install rosdep dependencies
+      command: >
+        rosdep install --from-paths {{ workspace }}/src
+        --ignore-src -y
+      args:
+        chdir: "{{ workspace }}"
+
+    - name: Build micro_ros_setup with colcon
+      shell: |
+        source /opt/ros/{{ ros_distro }}/setup.bash
+        colcon build
+      args:
+        chdir: "{{ workspace }}"
+        executable: /bin/bash
+
+    - name: Create micro-ROS Agent workspace
+      shell: |
+        source /opt/ros/{{ ros_distro }}/setup.bash
+        source {{ workspace }}/install/local_setup.bash
+        ros2 run micro_ros_setup create_agent_ws.sh
+      args:
+        chdir: "{{ workspace }}"
+        executable: /bin/bash
+
+    - name: Build micro-ROS Agent
+      shell: |
+        source /opt/ros/{{ ros_distro }}/setup.bash
+        source {{ workspace }}/install/local_setup.bash
+        ros2 run micro_ros_setup build_agent.sh
+      args:
+        chdir: "{{ workspace }}"
+        executable: /bin/bash
+
+    - name: Add micro_ros_agent to ~/.bashrc
+      blockinfile:
+        path: "{{ ansible_env.HOME }}/.bashrc"
+        marker: "# {mark} micro-ROS Agent"
+        block: |
+          source /opt/ros/{{ ros_distro }}/setup.bash
+          source {{ workspace }}/install/local_setup.bash
