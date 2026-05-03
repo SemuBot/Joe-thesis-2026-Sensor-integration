@@ -1,0 +1,993 @@
+ARM GAS  /tmp/cc3iyEpZ.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"hcsr04.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Common/Src/hcsr04.c"
+  20              		.section	.text.process_capture,"ax",%progbits
+  21              		.align	1
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	process_capture:
+  27              	.LVL0:
+  28              	.LFB139:
+   1:Common/Src/hcsr04.c **** #include "hcsr04.h"
+   2:Common/Src/hcsr04.c **** #include "tim.h"
+   3:Common/Src/hcsr04.c **** #include "gpio.h"
+   4:Common/Src/hcsr04.c **** 
+   5:Common/Src/hcsr04.c **** 
+   6:Common/Src/hcsr04.c **** 
+   7:Common/Src/hcsr04.c **** extern TIM_HandleTypeDef htim1;
+   8:Common/Src/hcsr04.c **** extern TIM_HandleTypeDef htim3;
+   9:Common/Src/hcsr04.c **** extern TIM_HandleTypeDef htim2;
+  10:Common/Src/hcsr04.c **** 
+  11:Common/Src/hcsr04.c **** 
+  12:Common/Src/hcsr04.c **** 
+  13:Common/Src/hcsr04.c **** hcsr04_sensor_t hcsr04_sensors[HCSR04_NUM_SENSORS] = {
+  14:Common/Src/hcsr04.c ****     // Sensor 0: TRIG=PC0, ECHO=PA10, TIM2_CH4
+  15:Common/Src/hcsr04.c ****     {
+  16:Common/Src/hcsr04.c ****         .trig_port = GPIOC, .trig_pin = GPIO_PIN_0,
+  17:Common/Src/hcsr04.c ****         .echo_port = GPIOA, .echo_pin = GPIO_PIN_10,
+  18:Common/Src/hcsr04.c ****         .htim = &htim2, .channel = TIM_CHANNEL_4,
+  19:Common/Src/hcsr04.c ****     },
+  20:Common/Src/hcsr04.c ****     // Sensor 1: TRIG=PC2, ECHO=PA8, TIM1_CH1
+  21:Common/Src/hcsr04.c ****     {
+  22:Common/Src/hcsr04.c ****         .trig_port = GPIOC, .trig_pin = GPIO_PIN_2,
+  23:Common/Src/hcsr04.c ****         .echo_port = GPIOA, .echo_pin = GPIO_PIN_8,
+  24:Common/Src/hcsr04.c ****         .htim = &htim1, .channel = TIM_CHANNEL_1,
+  25:Common/Src/hcsr04.c ****     },
+  26:Common/Src/hcsr04.c ****     // Sensor 2: TRIG=PC3, ECHO=PC7, TIM3_CH2
+  27:Common/Src/hcsr04.c ****     {
+  28:Common/Src/hcsr04.c ****         .trig_port = GPIOC, .trig_pin = GPIO_PIN_3,
+  29:Common/Src/hcsr04.c ****         .echo_port = GPIOC, .echo_pin = GPIO_PIN_7,
+  30:Common/Src/hcsr04.c ****         .htim = &htim3, .channel = TIM_CHANNEL_2,
+ARM GAS  /tmp/cc3iyEpZ.s 			page 2
+
+
+  31:Common/Src/hcsr04.c ****     },
+  32:Common/Src/hcsr04.c **** };
+  33:Common/Src/hcsr04.c **** 
+  34:Common/Src/hcsr04.c **** 
+  35:Common/Src/hcsr04.c **** 
+  36:Common/Src/hcsr04.c **** void hcsr04_init(void)
+  37:Common/Src/hcsr04.c **** {
+  38:Common/Src/hcsr04.c ****     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+  39:Common/Src/hcsr04.c ****     DWT->CYCCNT = 0;
+  40:Common/Src/hcsr04.c ****     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+  41:Common/Src/hcsr04.c **** 
+  42:Common/Src/hcsr04.c ****     // Start input capture interrupts for all channels
+  43:Common/Src/hcsr04.c ****     HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_1);
+  44:Common/Src/hcsr04.c ****     HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_4);
+  45:Common/Src/hcsr04.c ****     HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_2);
+  46:Common/Src/hcsr04.c **** }
+  47:Common/Src/hcsr04.c **** 
+  48:Common/Src/hcsr04.c **** 
+  49:Common/Src/hcsr04.c **** 
+  50:Common/Src/hcsr04.c **** void hcsr04_trigger(uint8_t sensor)
+  51:Common/Src/hcsr04.c **** {
+  52:Common/Src/hcsr04.c ****     if (sensor >= HCSR04_NUM_SENSORS) return;
+  53:Common/Src/hcsr04.c ****     hcsr04_sensor_t *s = &hcsr04_sensors[sensor];
+  54:Common/Src/hcsr04.c **** 
+  55:Common/Src/hcsr04.c ****     s->captured  = 0;
+  56:Common/Src/hcsr04.c ****     s->measuring = 1;
+  57:Common/Src/hcsr04.c ****     s->status    = HCSR04_OK;
+  58:Common/Src/hcsr04.c **** 
+  59:Common/Src/hcsr04.c ****     HAL_GPIO_WritePin(s->trig_port, s->trig_pin, GPIO_PIN_SET);
+  60:Common/Src/hcsr04.c ****     uint32_t start = DWT->CYCCNT;
+  61:Common/Src/hcsr04.c ****     uint32_t ticks = (HAL_RCC_GetHCLKFreq() / 1000000U) * 10;
+  62:Common/Src/hcsr04.c ****     while ((DWT->CYCCNT - start) < ticks);
+  63:Common/Src/hcsr04.c ****     HAL_GPIO_WritePin(s->trig_port, s->trig_pin, GPIO_PIN_RESET);
+  64:Common/Src/hcsr04.c **** }
+  65:Common/Src/hcsr04.c **** 
+  66:Common/Src/hcsr04.c **** 
+  67:Common/Src/hcsr04.c **** 
+  68:Common/Src/hcsr04.c **** void hcsr04_trigger_all(void)
+  69:Common/Src/hcsr04.c **** {
+  70:Common/Src/hcsr04.c ****     for (uint8_t i = 0; i < HCSR04_NUM_SENSORS; i++)
+  71:Common/Src/hcsr04.c ****         hcsr04_trigger(i);
+  72:Common/Src/hcsr04.c **** }
+  73:Common/Src/hcsr04.c **** 
+  74:Common/Src/hcsr04.c **** 
+  75:Common/Src/hcsr04.c **** 
+  76:Common/Src/hcsr04.c **** float hcsr04_get_range_mm(uint8_t sensor)
+  77:Common/Src/hcsr04.c **** {
+  78:Common/Src/hcsr04.c ****     if (sensor >= HCSR04_NUM_SENSORS) return 0;
+  79:Common/Src/hcsr04.c ****     return hcsr04_sensors[sensor].range_mm;
+  80:Common/Src/hcsr04.c **** }
+  81:Common/Src/hcsr04.c **** 
+  82:Common/Src/hcsr04.c **** 
+  83:Common/Src/hcsr04.c **** 
+  84:Common/Src/hcsr04.c **** hcsr04_status_t hcsr04_get_status(uint8_t sensor)
+  85:Common/Src/hcsr04.c **** {
+  86:Common/Src/hcsr04.c ****     if (sensor >= HCSR04_NUM_SENSORS) return HCSR04_ERROR;
+  87:Common/Src/hcsr04.c ****     return hcsr04_sensors[sensor].status;
+ARM GAS  /tmp/cc3iyEpZ.s 			page 3
+
+
+  88:Common/Src/hcsr04.c **** }
+  89:Common/Src/hcsr04.c **** 
+  90:Common/Src/hcsr04.c **** 
+  91:Common/Src/hcsr04.c **** 
+  92:Common/Src/hcsr04.c **** static void process_capture(hcsr04_sensor_t *s, uint32_t capture_val)
+  93:Common/Src/hcsr04.c **** {
+  29              		.loc 1 93 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 93 1 is_stmt 0 view .LVU1
+  34 0000 38B5     		push	{r3, r4, r5, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 16
+  37              		.cfi_offset 3, -16
+  38              		.cfi_offset 4, -12
+  39              		.cfi_offset 5, -8
+  40              		.cfi_offset 14, -4
+  41 0002 0446     		mov	r4, r0
+  42 0004 0D46     		mov	r5, r1
+  94:Common/Src/hcsr04.c ****     if (HAL_GPIO_ReadPin(s->echo_port, s->echo_pin) == GPIO_PIN_SET) {
+  43              		.loc 1 94 5 is_stmt 1 view .LVU2
+  44              		.loc 1 94 9 is_stmt 0 view .LVU3
+  45 0006 8189     		ldrh	r1, [r0, #12]
+  46              	.LVL1:
+  47              		.loc 1 94 9 view .LVU4
+  48 0008 8068     		ldr	r0, [r0, #8]
+  49              	.LVL2:
+  50              		.loc 1 94 9 view .LVU5
+  51 000a FFF7FEFF 		bl	HAL_GPIO_ReadPin
+  52              	.LVL3:
+  53              		.loc 1 94 8 discriminator 1 view .LVU6
+  54 000e 0128     		cmp	r0, #1
+  55 0010 27D0     		beq	.L13
+  56              	.LBB2:
+  95:Common/Src/hcsr04.c ****         s->rise_time = capture_val;
+  96:Common/Src/hcsr04.c ****         s->measuring = 1;
+  97:Common/Src/hcsr04.c ****     } else {
+  98:Common/Src/hcsr04.c ****         if (s->measuring == 0) return;
+  57              		.loc 1 98 9 is_stmt 1 view .LVU7
+  58              		.loc 1 98 14 is_stmt 0 view .LVU8
+  59 0012 94F82130 		ldrb	r3, [r4, #33]	@ zero_extendqisi2
+  60              		.loc 1 98 12 view .LVU9
+  61 0016 C3B3     		cbz	r3, .L1
+  99:Common/Src/hcsr04.c **** 
+ 100:Common/Src/hcsr04.c ****         uint32_t pulse_us;
+  62              		.loc 1 100 9 is_stmt 1 view .LVU10
+ 101:Common/Src/hcsr04.c ****         if (capture_val >= s->rise_time)
+  63              		.loc 1 101 9 view .LVU11
+  64              		.loc 1 101 29 is_stmt 0 view .LVU12
+  65 0018 A369     		ldr	r3, [r4, #24]
+  66              		.loc 1 101 12 view .LVU13
+  67 001a AB42     		cmp	r3, r5
+  68 001c 26D8     		bhi	.L4
+ 102:Common/Src/hcsr04.c ****             pulse_us = capture_val - s->rise_time;
+  69              		.loc 1 102 13 is_stmt 1 view .LVU14
+  70              		.loc 1 102 39 is_stmt 0 view .LVU15
+ARM GAS  /tmp/cc3iyEpZ.s 			page 4
+
+
+  71 001e A369     		ldr	r3, [r4, #24]
+  72              		.loc 1 102 22 view .LVU16
+  73 0020 EB1A     		subs	r3, r5, r3
+  74 0022 07EE903A 		vmov	s15, r3	@ int
+  75              	.LVL4:
+  76              	.L5:
+ 103:Common/Src/hcsr04.c ****         else
+ 104:Common/Src/hcsr04.c ****             pulse_us = (0xFFFFFFFF - s->rise_time) + capture_val;
+ 105:Common/Src/hcsr04.c **** 
+ 106:Common/Src/hcsr04.c ****         float mm = (pulse_us * 343.0f) / 2000.0f;
+  77              		.loc 1 106 9 is_stmt 1 view .LVU17
+  78              		.loc 1 106 30 is_stmt 0 view .LVU18
+  79 0026 F8EE677A 		vcvt.f32.u32	s15, s15
+  80 002a 9FED187A 		vldr.32	s14, .L14
+  81 002e 67EE877A 		vmul.f32	s15, s15, s14
+  82              		.loc 1 106 15 view .LVU19
+  83 0032 DFED176A 		vldr.32	s13, .L14+4
+  84 0036 87EEA67A 		vdiv.f32	s14, s15, s13
+  85              	.LVL5:
+ 107:Common/Src/hcsr04.c **** 
+ 108:Common/Src/hcsr04.c ****         if (mm >= HCSR04_MIN_RANGE_MM && mm <= HCSR04_MAX_RANGE_MM) {
+  86              		.loc 1 108 9 is_stmt 1 view .LVU20
+  87              		.loc 1 108 12 is_stmt 0 view .LVU21
+  88 003a F3EE047A 		vmov.f32	s15, #2.0e+1
+  89 003e B4EEE77A 		vcmpe.f32	s14, s15
+  90 0042 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  91 0046 17DB     		blt	.L6
+  92              		.loc 1 108 39 discriminator 1 view .LVU22
+  93 0048 DFED127A 		vldr.32	s15, .L14+8
+  94 004c B4EEE77A 		vcmpe.f32	s14, s15
+  95 0050 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  96 0054 10D8     		bhi	.L6
+ 109:Common/Src/hcsr04.c ****             s->range_mm = mm;
+  97              		.loc 1 109 13 is_stmt 1 view .LVU23
+  98              		.loc 1 109 25 is_stmt 0 view .LVU24
+  99 0056 84ED097A 		vstr.32	s14, [r4, #36]
+ 110:Common/Src/hcsr04.c ****             s->status   = HCSR04_OK;
+ 100              		.loc 1 110 13 is_stmt 1 view .LVU25
+ 101              		.loc 1 110 25 is_stmt 0 view .LVU26
+ 102 005a 0023     		movs	r3, #0
+ 103              	.LVL6:
+ 104              		.loc 1 110 25 view .LVU27
+ 105 005c 84F82830 		strb	r3, [r4, #40]
+ 106 0060 0DE0     		b	.L9
+ 107              	.LVL7:
+ 108              	.L13:
+ 109              		.loc 1 110 25 view .LVU28
+ 110              	.LBE2:
+  95:Common/Src/hcsr04.c ****         s->measuring = 1;
+ 111              		.loc 1 95 9 is_stmt 1 view .LVU29
+  95:Common/Src/hcsr04.c ****         s->measuring = 1;
+ 112              		.loc 1 95 22 is_stmt 0 view .LVU30
+ 113 0062 A561     		str	r5, [r4, #24]
+  96:Common/Src/hcsr04.c ****     } else {
+ 114              		.loc 1 96 9 is_stmt 1 view .LVU31
+  96:Common/Src/hcsr04.c ****     } else {
+ 115              		.loc 1 96 22 is_stmt 0 view .LVU32
+ARM GAS  /tmp/cc3iyEpZ.s 			page 5
+
+
+ 116 0064 0123     		movs	r3, #1
+ 117 0066 84F82130 		strb	r3, [r4, #33]
+ 118 006a 0EE0     		b	.L1
+ 119              	.L4:
+ 120              	.LBB3:
+ 104:Common/Src/hcsr04.c **** 
+ 121              		.loc 1 104 13 is_stmt 1 view .LVU33
+ 104:Common/Src/hcsr04.c **** 
+ 122              		.loc 1 104 39 is_stmt 0 view .LVU34
+ 123 006c A369     		ldr	r3, [r4, #24]
+ 104:Common/Src/hcsr04.c **** 
+ 124              		.loc 1 104 52 view .LVU35
+ 125 006e ED1A     		subs	r5, r5, r3
+ 126              	.LVL8:
+ 104:Common/Src/hcsr04.c **** 
+ 127              		.loc 1 104 22 view .LVU36
+ 128 0070 6B1E     		subs	r3, r5, #1
+ 129 0072 07EE903A 		vmov	s15, r3	@ int
+ 130              	.LVL9:
+ 104:Common/Src/hcsr04.c **** 
+ 131              		.loc 1 104 22 view .LVU37
+ 132 0076 D6E7     		b	.L5
+ 133              	.LVL10:
+ 134              	.L6:
+ 111:Common/Src/hcsr04.c ****         } else {
+ 112:Common/Src/hcsr04.c ****             s->status = HCSR04_ERROR;
+ 135              		.loc 1 112 13 is_stmt 1 view .LVU38
+ 136              		.loc 1 112 23 is_stmt 0 view .LVU39
+ 137 0078 0223     		movs	r3, #2
+ 138              	.LVL11:
+ 139              		.loc 1 112 23 view .LVU40
+ 140 007a 84F82830 		strb	r3, [r4, #40]
+ 141              	.L9:
+ 113:Common/Src/hcsr04.c ****         }
+ 114:Common/Src/hcsr04.c **** 
+ 115:Common/Src/hcsr04.c ****         s->captured  = 1;
+ 142              		.loc 1 115 9 is_stmt 1 view .LVU41
+ 143              		.loc 1 115 22 is_stmt 0 view .LVU42
+ 144 007e 0123     		movs	r3, #1
+ 145 0080 84F82030 		strb	r3, [r4, #32]
+ 116:Common/Src/hcsr04.c ****         s->measuring = 0;
+ 146              		.loc 1 116 9 is_stmt 1 view .LVU43
+ 147              		.loc 1 116 22 is_stmt 0 view .LVU44
+ 148 0084 0023     		movs	r3, #0
+ 149 0086 84F82130 		strb	r3, [r4, #33]
+ 150              	.LVL12:
+ 151              	.L1:
+ 152              		.loc 1 116 22 view .LVU45
+ 153              	.LBE3:
+ 117:Common/Src/hcsr04.c ****     }
+ 118:Common/Src/hcsr04.c **** }
+ 154              		.loc 1 118 1 view .LVU46
+ 155 008a 38BD     		pop	{r3, r4, r5, pc}
+ 156              	.LVL13:
+ 157              	.L15:
+ 158              		.loc 1 118 1 view .LVU47
+ 159              		.align	2
+ARM GAS  /tmp/cc3iyEpZ.s 			page 6
+
+
+ 160              	.L14:
+ 161 008c 0080AB43 		.word	1135312896
+ 162 0090 0000FA44 		.word	1157234688
+ 163 0094 00007A45 		.word	1165623296
+ 164              		.cfi_endproc
+ 165              	.LFE139:
+ 167              		.section	.text.hcsr04_init,"ax",%progbits
+ 168              		.align	1
+ 169              		.global	hcsr04_init
+ 170              		.syntax unified
+ 171              		.thumb
+ 172              		.thumb_func
+ 174              	hcsr04_init:
+ 175              	.LFB134:
+  37:Common/Src/hcsr04.c ****     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+ 176              		.loc 1 37 1 is_stmt 1 view -0
+ 177              		.cfi_startproc
+ 178              		@ args = 0, pretend = 0, frame = 0
+ 179              		@ frame_needed = 0, uses_anonymous_args = 0
+ 180 0000 08B5     		push	{r3, lr}
+ 181              	.LCFI1:
+ 182              		.cfi_def_cfa_offset 8
+ 183              		.cfi_offset 3, -8
+ 184              		.cfi_offset 14, -4
+  38:Common/Src/hcsr04.c ****     DWT->CYCCNT = 0;
+ 185              		.loc 1 38 5 view .LVU49
+  38:Common/Src/hcsr04.c ****     DWT->CYCCNT = 0;
+ 186              		.loc 1 38 14 is_stmt 0 view .LVU50
+ 187 0002 0D4A     		ldr	r2, .L18
+ 188 0004 D2F8FC30 		ldr	r3, [r2, #252]
+  38:Common/Src/hcsr04.c ****     DWT->CYCCNT = 0;
+ 189              		.loc 1 38 22 view .LVU51
+ 190 0008 43F08073 		orr	r3, r3, #16777216
+ 191 000c C2F8FC30 		str	r3, [r2, #252]
+  39:Common/Src/hcsr04.c ****     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+ 192              		.loc 1 39 5 is_stmt 1 view .LVU52
+  39:Common/Src/hcsr04.c ****     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+ 193              		.loc 1 39 17 is_stmt 0 view .LVU53
+ 194 0010 0A4B     		ldr	r3, .L18+4
+ 195 0012 0021     		movs	r1, #0
+ 196 0014 5960     		str	r1, [r3, #4]
+  40:Common/Src/hcsr04.c **** 
+ 197              		.loc 1 40 5 is_stmt 1 view .LVU54
+  40:Common/Src/hcsr04.c **** 
+ 198              		.loc 1 40 8 is_stmt 0 view .LVU55
+ 199 0016 1A68     		ldr	r2, [r3]
+  40:Common/Src/hcsr04.c **** 
+ 200              		.loc 1 40 15 view .LVU56
+ 201 0018 42F00102 		orr	r2, r2, #1
+ 202 001c 1A60     		str	r2, [r3]
+  43:Common/Src/hcsr04.c ****     HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_4);
+ 203              		.loc 1 43 5 is_stmt 1 view .LVU57
+ 204 001e 0848     		ldr	r0, .L18+8
+ 205 0020 FFF7FEFF 		bl	HAL_TIM_IC_Start_IT
+ 206              	.LVL14:
+  44:Common/Src/hcsr04.c ****     HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_2);
+ 207              		.loc 1 44 5 view .LVU58
+ARM GAS  /tmp/cc3iyEpZ.s 			page 7
+
+
+ 208 0024 0C21     		movs	r1, #12
+ 209 0026 0748     		ldr	r0, .L18+12
+ 210 0028 FFF7FEFF 		bl	HAL_TIM_IC_Start_IT
+ 211              	.LVL15:
+  45:Common/Src/hcsr04.c **** }
+ 212              		.loc 1 45 5 view .LVU59
+ 213 002c 0421     		movs	r1, #4
+ 214 002e 0648     		ldr	r0, .L18+16
+ 215 0030 FFF7FEFF 		bl	HAL_TIM_IC_Start_IT
+ 216              	.LVL16:
+  46:Common/Src/hcsr04.c **** 
+ 217              		.loc 1 46 1 is_stmt 0 view .LVU60
+ 218 0034 08BD     		pop	{r3, pc}
+ 219              	.L19:
+ 220 0036 00BF     		.align	2
+ 221              	.L18:
+ 222 0038 00ED00E0 		.word	-536810240
+ 223 003c 001000E0 		.word	-536866816
+ 224 0040 00000000 		.word	htim1
+ 225 0044 00000000 		.word	htim2
+ 226 0048 00000000 		.word	htim3
+ 227              		.cfi_endproc
+ 228              	.LFE134:
+ 230              		.section	.text.hcsr04_trigger,"ax",%progbits
+ 231              		.align	1
+ 232              		.global	hcsr04_trigger
+ 233              		.syntax unified
+ 234              		.thumb
+ 235              		.thumb_func
+ 237              	hcsr04_trigger:
+ 238              	.LVL17:
+ 239              	.LFB135:
+  51:Common/Src/hcsr04.c ****     if (sensor >= HCSR04_NUM_SENSORS) return;
+ 240              		.loc 1 51 1 is_stmt 1 view -0
+ 241              		.cfi_startproc
+ 242              		@ args = 0, pretend = 0, frame = 0
+ 243              		@ frame_needed = 0, uses_anonymous_args = 0
+  52:Common/Src/hcsr04.c ****     hcsr04_sensor_t *s = &hcsr04_sensors[sensor];
+ 244              		.loc 1 52 5 view .LVU62
+  52:Common/Src/hcsr04.c ****     hcsr04_sensor_t *s = &hcsr04_sensors[sensor];
+ 245              		.loc 1 52 8 is_stmt 0 view .LVU63
+ 246 0000 0228     		cmp	r0, #2
+ 247 0002 00D9     		bls	.L27
+ 248 0004 7047     		bx	lr
+ 249              	.L27:
+  51:Common/Src/hcsr04.c ****     if (sensor >= HCSR04_NUM_SENSORS) return;
+ 250              		.loc 1 51 1 view .LVU64
+ 251 0006 38B5     		push	{r3, r4, r5, lr}
+ 252              	.LCFI2:
+ 253              		.cfi_def_cfa_offset 16
+ 254              		.cfi_offset 3, -16
+ 255              		.cfi_offset 4, -12
+ 256              		.cfi_offset 5, -8
+ 257              		.cfi_offset 14, -4
+ 258 0008 0446     		mov	r4, r0
+  53:Common/Src/hcsr04.c **** 
+ 259              		.loc 1 53 5 is_stmt 1 view .LVU65
+ARM GAS  /tmp/cc3iyEpZ.s 			page 8
+
+
+ 260              	.LVL18:
+  55:Common/Src/hcsr04.c ****     s->measuring = 1;
+ 261              		.loc 1 55 5 view .LVU66
+  55:Common/Src/hcsr04.c ****     s->measuring = 1;
+ 262              		.loc 1 55 18 is_stmt 0 view .LVU67
+ 263 000a 1648     		ldr	r0, .L28
+ 264              	.LVL19:
+  55:Common/Src/hcsr04.c ****     s->measuring = 1;
+ 265              		.loc 1 55 18 view .LVU68
+ 266 000c 2C23     		movs	r3, #44
+ 267 000e 04FB03F3 		mul	r3, r4, r3
+ 268 0012 C118     		adds	r1, r0, r3
+ 269              	.LVL20:
+  55:Common/Src/hcsr04.c ****     s->measuring = 1;
+ 270              		.loc 1 55 18 view .LVU69
+ 271 0014 0025     		movs	r5, #0
+ 272 0016 81F82050 		strb	r5, [r1, #32]
+  56:Common/Src/hcsr04.c ****     s->status    = HCSR04_OK;
+ 273              		.loc 1 56 5 is_stmt 1 view .LVU70
+  56:Common/Src/hcsr04.c ****     s->status    = HCSR04_OK;
+ 274              		.loc 1 56 18 is_stmt 0 view .LVU71
+ 275 001a 0122     		movs	r2, #1
+ 276 001c 81F82120 		strb	r2, [r1, #33]
+  57:Common/Src/hcsr04.c **** 
+ 277              		.loc 1 57 5 is_stmt 1 view .LVU72
+  57:Common/Src/hcsr04.c **** 
+ 278              		.loc 1 57 18 is_stmt 0 view .LVU73
+ 279 0020 81F82850 		strb	r5, [r1, #40]
+  59:Common/Src/hcsr04.c ****     uint32_t start = DWT->CYCCNT;
+ 280              		.loc 1 59 5 is_stmt 1 view .LVU74
+ 281 0024 8988     		ldrh	r1, [r1, #4]
+ 282              	.LVL21:
+  59:Common/Src/hcsr04.c ****     uint32_t start = DWT->CYCCNT;
+ 283              		.loc 1 59 5 is_stmt 0 view .LVU75
+ 284 0026 C058     		ldr	r0, [r0, r3]
+ 285 0028 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 286              	.LVL22:
+  60:Common/Src/hcsr04.c ****     uint32_t ticks = (HAL_RCC_GetHCLKFreq() / 1000000U) * 10;
+ 287              		.loc 1 60 5 is_stmt 1 view .LVU76
+  60:Common/Src/hcsr04.c ****     uint32_t ticks = (HAL_RCC_GetHCLKFreq() / 1000000U) * 10;
+ 288              		.loc 1 60 14 is_stmt 0 view .LVU77
+ 289 002c 0E4B     		ldr	r3, .L28+4
+ 290 002e 5D68     		ldr	r5, [r3, #4]
+ 291              	.LVL23:
+  61:Common/Src/hcsr04.c ****     while ((DWT->CYCCNT - start) < ticks);
+ 292              		.loc 1 61 5 is_stmt 1 view .LVU78
+  61:Common/Src/hcsr04.c ****     while ((DWT->CYCCNT - start) < ticks);
+ 293              		.loc 1 61 23 is_stmt 0 view .LVU79
+ 294 0030 FFF7FEFF 		bl	HAL_RCC_GetHCLKFreq
+ 295              	.LVL24:
+  61:Common/Src/hcsr04.c ****     while ((DWT->CYCCNT - start) < ticks);
+ 296              		.loc 1 61 45 discriminator 1 view .LVU80
+ 297 0034 0D4B     		ldr	r3, .L28+8
+ 298 0036 A3FB0032 		umull	r3, r2, r3, r0
+ 299 003a 920C     		lsrs	r2, r2, #18
+  61:Common/Src/hcsr04.c ****     while ((DWT->CYCCNT - start) < ticks);
+ 300              		.loc 1 61 14 discriminator 1 view .LVU81
+ARM GAS  /tmp/cc3iyEpZ.s 			page 9
+
+
+ 301 003c 02EB8202 		add	r2, r2, r2, lsl #2
+ 302 0040 5200     		lsls	r2, r2, #1
+ 303              	.LVL25:
+  62:Common/Src/hcsr04.c ****     HAL_GPIO_WritePin(s->trig_port, s->trig_pin, GPIO_PIN_RESET);
+ 304              		.loc 1 62 5 is_stmt 1 view .LVU82
+ 305              	.L22:
+  62:Common/Src/hcsr04.c ****     HAL_GPIO_WritePin(s->trig_port, s->trig_pin, GPIO_PIN_RESET);
+ 306              		.loc 1 62 34 discriminator 1 view .LVU83
+  62:Common/Src/hcsr04.c ****     HAL_GPIO_WritePin(s->trig_port, s->trig_pin, GPIO_PIN_RESET);
+ 307              		.loc 1 62 16 is_stmt 0 discriminator 1 view .LVU84
+ 308 0042 094B     		ldr	r3, .L28+4
+ 309 0044 5B68     		ldr	r3, [r3, #4]
+  62:Common/Src/hcsr04.c ****     HAL_GPIO_WritePin(s->trig_port, s->trig_pin, GPIO_PIN_RESET);
+ 310              		.loc 1 62 25 discriminator 1 view .LVU85
+ 311 0046 5B1B     		subs	r3, r3, r5
+  62:Common/Src/hcsr04.c ****     HAL_GPIO_WritePin(s->trig_port, s->trig_pin, GPIO_PIN_RESET);
+ 312              		.loc 1 62 34 discriminator 1 view .LVU86
+ 313 0048 9342     		cmp	r3, r2
+ 314 004a FAD3     		bcc	.L22
+  63:Common/Src/hcsr04.c **** }
+ 315              		.loc 1 63 5 is_stmt 1 view .LVU87
+ 316 004c 054B     		ldr	r3, .L28
+ 317 004e 2C22     		movs	r2, #44
+ 318              	.LVL26:
+  63:Common/Src/hcsr04.c **** }
+ 319              		.loc 1 63 5 is_stmt 0 view .LVU88
+ 320 0050 02FB04F4 		mul	r4, r2, r4
+ 321              	.LVL27:
+  63:Common/Src/hcsr04.c **** }
+ 322              		.loc 1 63 5 view .LVU89
+ 323 0054 1919     		adds	r1, r3, r4
+ 324 0056 0022     		movs	r2, #0
+ 325 0058 8988     		ldrh	r1, [r1, #4]
+ 326 005a 1859     		ldr	r0, [r3, r4]
+ 327              	.LVL28:
+  63:Common/Src/hcsr04.c **** }
+ 328              		.loc 1 63 5 view .LVU90
+ 329 005c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 330              	.LVL29:
+  64:Common/Src/hcsr04.c **** 
+ 331              		.loc 1 64 1 view .LVU91
+ 332 0060 38BD     		pop	{r3, r4, r5, pc}
+ 333              	.LVL30:
+ 334              	.L29:
+  64:Common/Src/hcsr04.c **** 
+ 335              		.loc 1 64 1 view .LVU92
+ 336 0062 00BF     		.align	2
+ 337              	.L28:
+ 338 0064 00000000 		.word	hcsr04_sensors
+ 339 0068 001000E0 		.word	-536866816
+ 340 006c 83DE1B43 		.word	1125899907
+ 341              		.cfi_endproc
+ 342              	.LFE135:
+ 344              		.section	.text.hcsr04_trigger_all,"ax",%progbits
+ 345              		.align	1
+ 346              		.global	hcsr04_trigger_all
+ 347              		.syntax unified
+ARM GAS  /tmp/cc3iyEpZ.s 			page 10
+
+
+ 348              		.thumb
+ 349              		.thumb_func
+ 351              	hcsr04_trigger_all:
+ 352              	.LFB136:
+  69:Common/Src/hcsr04.c ****     for (uint8_t i = 0; i < HCSR04_NUM_SENSORS; i++)
+ 353              		.loc 1 69 1 is_stmt 1 view -0
+ 354              		.cfi_startproc
+ 355              		@ args = 0, pretend = 0, frame = 0
+ 356              		@ frame_needed = 0, uses_anonymous_args = 0
+ 357 0000 10B5     		push	{r4, lr}
+ 358              	.LCFI3:
+ 359              		.cfi_def_cfa_offset 8
+ 360              		.cfi_offset 4, -8
+ 361              		.cfi_offset 14, -4
+  70:Common/Src/hcsr04.c ****         hcsr04_trigger(i);
+ 362              		.loc 1 70 5 view .LVU94
+ 363              	.LBB4:
+  70:Common/Src/hcsr04.c ****         hcsr04_trigger(i);
+ 364              		.loc 1 70 10 view .LVU95
+ 365              	.LVL31:
+  70:Common/Src/hcsr04.c ****         hcsr04_trigger(i);
+ 366              		.loc 1 70 18 is_stmt 0 view .LVU96
+ 367 0002 0024     		movs	r4, #0
+  70:Common/Src/hcsr04.c ****         hcsr04_trigger(i);
+ 368              		.loc 1 70 5 view .LVU97
+ 369 0004 04E0     		b	.L31
+ 370              	.LVL32:
+ 371              	.L32:
+  71:Common/Src/hcsr04.c **** }
+ 372              		.loc 1 71 9 is_stmt 1 view .LVU98
+ 373 0006 2046     		mov	r0, r4
+ 374 0008 FFF7FEFF 		bl	hcsr04_trigger
+ 375              	.LVL33:
+  70:Common/Src/hcsr04.c ****         hcsr04_trigger(i);
+ 376              		.loc 1 70 50 discriminator 3 view .LVU99
+ 377 000c 0134     		adds	r4, r4, #1
+ 378              	.LVL34:
+  70:Common/Src/hcsr04.c ****         hcsr04_trigger(i);
+ 379              		.loc 1 70 50 is_stmt 0 discriminator 3 view .LVU100
+ 380 000e E4B2     		uxtb	r4, r4
+ 381              	.LVL35:
+ 382              	.L31:
+  70:Common/Src/hcsr04.c ****         hcsr04_trigger(i);
+ 383              		.loc 1 70 27 is_stmt 1 discriminator 1 view .LVU101
+ 384 0010 022C     		cmp	r4, #2
+ 385 0012 F8D9     		bls	.L32
+ 386              	.LBE4:
+  72:Common/Src/hcsr04.c **** 
+ 387              		.loc 1 72 1 is_stmt 0 view .LVU102
+ 388 0014 10BD     		pop	{r4, pc}
+  72:Common/Src/hcsr04.c **** 
+ 389              		.loc 1 72 1 view .LVU103
+ 390              		.cfi_endproc
+ 391              	.LFE136:
+ 393              		.section	.text.hcsr04_get_range_mm,"ax",%progbits
+ 394              		.align	1
+ 395              		.global	hcsr04_get_range_mm
+ARM GAS  /tmp/cc3iyEpZ.s 			page 11
+
+
+ 396              		.syntax unified
+ 397              		.thumb
+ 398              		.thumb_func
+ 400              	hcsr04_get_range_mm:
+ 401              	.LVL36:
+ 402              	.LFB137:
+  77:Common/Src/hcsr04.c ****     if (sensor >= HCSR04_NUM_SENSORS) return 0;
+ 403              		.loc 1 77 1 is_stmt 1 view -0
+ 404              		.cfi_startproc
+ 405              		@ args = 0, pretend = 0, frame = 0
+ 406              		@ frame_needed = 0, uses_anonymous_args = 0
+ 407              		@ link register save eliminated.
+  78:Common/Src/hcsr04.c ****     return hcsr04_sensors[sensor].range_mm;
+ 408              		.loc 1 78 5 view .LVU105
+  78:Common/Src/hcsr04.c ****     return hcsr04_sensors[sensor].range_mm;
+ 409              		.loc 1 78 8 is_stmt 0 view .LVU106
+ 410 0000 0228     		cmp	r0, #2
+ 411 0002 06D8     		bhi	.L36
+  79:Common/Src/hcsr04.c **** }
+ 412              		.loc 1 79 5 is_stmt 1 view .LVU107
+  79:Common/Src/hcsr04.c **** }
+ 413              		.loc 1 79 34 is_stmt 0 view .LVU108
+ 414 0004 044B     		ldr	r3, .L37
+ 415 0006 2C22     		movs	r2, #44
+ 416 0008 02FB0033 		mla	r3, r2, r0, r3
+ 417 000c 93ED090A 		vldr.32	s0, [r3, #36]
+ 418 0010 7047     		bx	lr
+ 419              	.L36:
+  78:Common/Src/hcsr04.c ****     return hcsr04_sensors[sensor].range_mm;
+ 420              		.loc 1 78 46 discriminator 1 view .LVU109
+ 421 0012 9FED020A 		vldr.32	s0, .L37+4
+  80:Common/Src/hcsr04.c **** 
+ 422              		.loc 1 80 1 view .LVU110
+ 423 0016 7047     		bx	lr
+ 424              	.L38:
+ 425              		.align	2
+ 426              	.L37:
+ 427 0018 00000000 		.word	hcsr04_sensors
+ 428 001c 00000000 		.word	0
+ 429              		.cfi_endproc
+ 430              	.LFE137:
+ 432              		.section	.text.hcsr04_get_status,"ax",%progbits
+ 433              		.align	1
+ 434              		.global	hcsr04_get_status
+ 435              		.syntax unified
+ 436              		.thumb
+ 437              		.thumb_func
+ 439              	hcsr04_get_status:
+ 440              	.LVL37:
+ 441              	.LFB138:
+  85:Common/Src/hcsr04.c ****     if (sensor >= HCSR04_NUM_SENSORS) return HCSR04_ERROR;
+ 442              		.loc 1 85 1 is_stmt 1 view -0
+ 443              		.cfi_startproc
+ 444              		@ args = 0, pretend = 0, frame = 0
+ 445              		@ frame_needed = 0, uses_anonymous_args = 0
+ 446              		@ link register save eliminated.
+  86:Common/Src/hcsr04.c ****     return hcsr04_sensors[sensor].status;
+ARM GAS  /tmp/cc3iyEpZ.s 			page 12
+
+
+ 447              		.loc 1 86 5 view .LVU112
+  86:Common/Src/hcsr04.c ****     return hcsr04_sensors[sensor].status;
+ 448              		.loc 1 86 8 is_stmt 0 view .LVU113
+ 449 0000 0228     		cmp	r0, #2
+ 450 0002 06D8     		bhi	.L41
+  87:Common/Src/hcsr04.c **** }
+ 451              		.loc 1 87 5 is_stmt 1 view .LVU114
+  87:Common/Src/hcsr04.c **** }
+ 452              		.loc 1 87 34 is_stmt 0 view .LVU115
+ 453 0004 044B     		ldr	r3, .L42
+ 454 0006 2C22     		movs	r2, #44
+ 455 0008 02FB0033 		mla	r3, r2, r0, r3
+ 456 000c 93F82800 		ldrb	r0, [r3, #40]	@ zero_extendqisi2
+ 457              	.LVL38:
+  87:Common/Src/hcsr04.c **** }
+ 458              		.loc 1 87 34 view .LVU116
+ 459 0010 7047     		bx	lr
+ 460              	.LVL39:
+ 461              	.L41:
+  86:Common/Src/hcsr04.c ****     return hcsr04_sensors[sensor].status;
+ 462              		.loc 1 86 46 discriminator 1 view .LVU117
+ 463 0012 0220     		movs	r0, #2
+ 464              	.LVL40:
+  88:Common/Src/hcsr04.c **** 
+ 465              		.loc 1 88 1 view .LVU118
+ 466 0014 7047     		bx	lr
+ 467              	.L43:
+ 468 0016 00BF     		.align	2
+ 469              	.L42:
+ 470 0018 00000000 		.word	hcsr04_sensors
+ 471              		.cfi_endproc
+ 472              	.LFE138:
+ 474              		.section	.text.hcsr04_tim1_ic_callback,"ax",%progbits
+ 475              		.align	1
+ 476              		.global	hcsr04_tim1_ic_callback
+ 477              		.syntax unified
+ 478              		.thumb
+ 479              		.thumb_func
+ 481              	hcsr04_tim1_ic_callback:
+ 482              	.LVL41:
+ 483              	.LFB140:
+ 119:Common/Src/hcsr04.c **** 
+ 120:Common/Src/hcsr04.c **** 
+ 121:Common/Src/hcsr04.c **** 
+ 122:Common/Src/hcsr04.c **** void hcsr04_tim1_ic_callback(TIM_HandleTypeDef *htim)
+ 123:Common/Src/hcsr04.c **** {
+ 484              		.loc 1 123 1 is_stmt 1 view -0
+ 485              		.cfi_startproc
+ 486              		@ args = 0, pretend = 0, frame = 0
+ 487              		@ frame_needed = 0, uses_anonymous_args = 0
+ 488              		.loc 1 123 1 is_stmt 0 view .LVU120
+ 489 0000 08B5     		push	{r3, lr}
+ 490              	.LCFI4:
+ 491              		.cfi_def_cfa_offset 8
+ 492              		.cfi_offset 3, -8
+ 493              		.cfi_offset 14, -4
+ 124:Common/Src/hcsr04.c ****     if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
+ARM GAS  /tmp/cc3iyEpZ.s 			page 13
+
+
+ 494              		.loc 1 124 5 is_stmt 1 view .LVU121
+ 495              		.loc 1 124 13 is_stmt 0 view .LVU122
+ 496 0002 037F     		ldrb	r3, [r0, #28]	@ zero_extendqisi2
+ 497              		.loc 1 124 8 view .LVU123
+ 498 0004 012B     		cmp	r3, #1
+ 499 0006 00D0     		beq	.L47
+ 500              	.LVL42:
+ 501              	.L44:
+ 125:Common/Src/hcsr04.c ****         process_capture(&hcsr04_sensors[1],
+ 126:Common/Src/hcsr04.c ****             HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1));
+ 127:Common/Src/hcsr04.c **** }
+ 502              		.loc 1 127 1 view .LVU124
+ 503 0008 08BD     		pop	{r3, pc}
+ 504              	.LVL43:
+ 505              	.L47:
+ 125:Common/Src/hcsr04.c ****         process_capture(&hcsr04_sensors[1],
+ 506              		.loc 1 125 9 is_stmt 1 view .LVU125
+ 507 000a 0021     		movs	r1, #0
+ 508 000c FFF7FEFF 		bl	HAL_TIM_ReadCapturedValue
+ 509              	.LVL44:
+ 125:Common/Src/hcsr04.c ****         process_capture(&hcsr04_sensors[1],
+ 510              		.loc 1 125 9 is_stmt 0 view .LVU126
+ 511 0010 0146     		mov	r1, r0
+ 125:Common/Src/hcsr04.c ****         process_capture(&hcsr04_sensors[1],
+ 512              		.loc 1 125 9 discriminator 1 view .LVU127
+ 513 0012 0248     		ldr	r0, .L48
+ 514 0014 FFF7FEFF 		bl	process_capture
+ 515              	.LVL45:
+ 516              		.loc 1 127 1 view .LVU128
+ 517 0018 F6E7     		b	.L44
+ 518              	.L49:
+ 519 001a 00BF     		.align	2
+ 520              	.L48:
+ 521 001c 2C000000 		.word	hcsr04_sensors+44
+ 522              		.cfi_endproc
+ 523              	.LFE140:
+ 525              		.section	.text.hcsr04_tim2_ic_callback,"ax",%progbits
+ 526              		.align	1
+ 527              		.global	hcsr04_tim2_ic_callback
+ 528              		.syntax unified
+ 529              		.thumb
+ 530              		.thumb_func
+ 532              	hcsr04_tim2_ic_callback:
+ 533              	.LVL46:
+ 534              	.LFB141:
+ 128:Common/Src/hcsr04.c **** 
+ 129:Common/Src/hcsr04.c **** 
+ 130:Common/Src/hcsr04.c **** 
+ 131:Common/Src/hcsr04.c **** void hcsr04_tim2_ic_callback(TIM_HandleTypeDef *htim)
+ 132:Common/Src/hcsr04.c **** {
+ 535              		.loc 1 132 1 is_stmt 1 view -0
+ 536              		.cfi_startproc
+ 537              		@ args = 0, pretend = 0, frame = 0
+ 538              		@ frame_needed = 0, uses_anonymous_args = 0
+ 539              		.loc 1 132 1 is_stmt 0 view .LVU130
+ 540 0000 08B5     		push	{r3, lr}
+ 541              	.LCFI5:
+ARM GAS  /tmp/cc3iyEpZ.s 			page 14
+
+
+ 542              		.cfi_def_cfa_offset 8
+ 543              		.cfi_offset 3, -8
+ 544              		.cfi_offset 14, -4
+ 133:Common/Src/hcsr04.c ****     if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4)
+ 545              		.loc 1 133 5 is_stmt 1 view .LVU131
+ 546              		.loc 1 133 13 is_stmt 0 view .LVU132
+ 547 0002 037F     		ldrb	r3, [r0, #28]	@ zero_extendqisi2
+ 548              		.loc 1 133 8 view .LVU133
+ 549 0004 082B     		cmp	r3, #8
+ 550 0006 00D0     		beq	.L53
+ 551              	.LVL47:
+ 552              	.L50:
+ 134:Common/Src/hcsr04.c ****         process_capture(&hcsr04_sensors[0],
+ 135:Common/Src/hcsr04.c ****             HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_4));
+ 136:Common/Src/hcsr04.c **** }
+ 553              		.loc 1 136 1 view .LVU134
+ 554 0008 08BD     		pop	{r3, pc}
+ 555              	.LVL48:
+ 556              	.L53:
+ 134:Common/Src/hcsr04.c ****         process_capture(&hcsr04_sensors[0],
+ 557              		.loc 1 134 9 is_stmt 1 view .LVU135
+ 558 000a 0C21     		movs	r1, #12
+ 559 000c FFF7FEFF 		bl	HAL_TIM_ReadCapturedValue
+ 560              	.LVL49:
+ 134:Common/Src/hcsr04.c ****         process_capture(&hcsr04_sensors[0],
+ 561              		.loc 1 134 9 is_stmt 0 view .LVU136
+ 562 0010 0146     		mov	r1, r0
+ 134:Common/Src/hcsr04.c ****         process_capture(&hcsr04_sensors[0],
+ 563              		.loc 1 134 9 discriminator 1 view .LVU137
+ 564 0012 0248     		ldr	r0, .L54
+ 565 0014 FFF7FEFF 		bl	process_capture
+ 566              	.LVL50:
+ 567              		.loc 1 136 1 view .LVU138
+ 568 0018 F6E7     		b	.L50
+ 569              	.L55:
+ 570 001a 00BF     		.align	2
+ 571              	.L54:
+ 572 001c 00000000 		.word	hcsr04_sensors
+ 573              		.cfi_endproc
+ 574              	.LFE141:
+ 576              		.section	.text.hcsr04_tim3_ic_callback,"ax",%progbits
+ 577              		.align	1
+ 578              		.global	hcsr04_tim3_ic_callback
+ 579              		.syntax unified
+ 580              		.thumb
+ 581              		.thumb_func
+ 583              	hcsr04_tim3_ic_callback:
+ 584              	.LVL51:
+ 585              	.LFB142:
+ 137:Common/Src/hcsr04.c **** 
+ 138:Common/Src/hcsr04.c **** 
+ 139:Common/Src/hcsr04.c **** 
+ 140:Common/Src/hcsr04.c **** void hcsr04_tim3_ic_callback(TIM_HandleTypeDef *htim)
+ 141:Common/Src/hcsr04.c **** {
+ 586              		.loc 1 141 1 is_stmt 1 view -0
+ 587              		.cfi_startproc
+ 588              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  /tmp/cc3iyEpZ.s 			page 15
+
+
+ 589              		@ frame_needed = 0, uses_anonymous_args = 0
+ 590              		.loc 1 141 1 is_stmt 0 view .LVU140
+ 591 0000 08B5     		push	{r3, lr}
+ 592              	.LCFI6:
+ 593              		.cfi_def_cfa_offset 8
+ 594              		.cfi_offset 3, -8
+ 595              		.cfi_offset 14, -4
+ 142:Common/Src/hcsr04.c ****     if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
+ 596              		.loc 1 142 5 is_stmt 1 view .LVU141
+ 597              		.loc 1 142 13 is_stmt 0 view .LVU142
+ 598 0002 037F     		ldrb	r3, [r0, #28]	@ zero_extendqisi2
+ 599              		.loc 1 142 8 view .LVU143
+ 600 0004 022B     		cmp	r3, #2
+ 601 0006 00D0     		beq	.L59
+ 602              	.LVL52:
+ 603              	.L56:
+ 143:Common/Src/hcsr04.c ****         process_capture(&hcsr04_sensors[2],
+ 144:Common/Src/hcsr04.c ****             HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2));
+ 145:Common/Src/hcsr04.c **** }
+ 604              		.loc 1 145 1 view .LVU144
+ 605 0008 08BD     		pop	{r3, pc}
+ 606              	.LVL53:
+ 607              	.L59:
+ 143:Common/Src/hcsr04.c ****         process_capture(&hcsr04_sensors[2],
+ 608              		.loc 1 143 9 is_stmt 1 view .LVU145
+ 609 000a 0421     		movs	r1, #4
+ 610 000c FFF7FEFF 		bl	HAL_TIM_ReadCapturedValue
+ 611              	.LVL54:
+ 143:Common/Src/hcsr04.c ****         process_capture(&hcsr04_sensors[2],
+ 612              		.loc 1 143 9 is_stmt 0 view .LVU146
+ 613 0010 0146     		mov	r1, r0
+ 143:Common/Src/hcsr04.c ****         process_capture(&hcsr04_sensors[2],
+ 614              		.loc 1 143 9 discriminator 1 view .LVU147
+ 615 0012 0248     		ldr	r0, .L60
+ 616 0014 FFF7FEFF 		bl	process_capture
+ 617              	.LVL55:
+ 618              		.loc 1 145 1 view .LVU148
+ 619 0018 F6E7     		b	.L56
+ 620              	.L61:
+ 621 001a 00BF     		.align	2
+ 622              	.L60:
+ 623 001c 58000000 		.word	hcsr04_sensors+88
+ 624              		.cfi_endproc
+ 625              	.LFE142:
+ 627              		.global	hcsr04_sensors
+ 628              		.section	.data.hcsr04_sensors,"aw"
+ 629              		.align	2
+ 632              	hcsr04_sensors:
+ 633 0000 00080048 		.word	1207961600
+ 634 0004 0100     		.short	1
+ 635 0006 0000     		.space	2
+ 636 0008 00000048 		.word	1207959552
+ 637 000c 0004     		.short	1024
+ 638 000e 0000     		.space	2
+ 639 0010 00000000 		.word	htim2
+ 640 0014 0C000000 		.word	12
+ 641 0018 00000000 		.space	20
+ARM GAS  /tmp/cc3iyEpZ.s 			page 16
+
+
+ 641      00000000 
+ 641      00000000 
+ 641      00000000 
+ 641      00000000 
+ 642 002c 00080048 		.word	1207961600
+ 643 0030 0400     		.short	4
+ 644 0032 0000     		.space	2
+ 645 0034 00000048 		.word	1207959552
+ 646 0038 0001     		.short	256
+ 647 003a 0000     		.space	2
+ 648 003c 00000000 		.word	htim1
+ 649 0040 00000000 		.word	0
+ 650 0044 00000000 		.space	20
+ 650      00000000 
+ 650      00000000 
+ 650      00000000 
+ 650      00000000 
+ 651 0058 00080048 		.word	1207961600
+ 652 005c 0800     		.short	8
+ 653 005e 0000     		.space	2
+ 654 0060 00080048 		.word	1207961600
+ 655 0064 8000     		.short	128
+ 656 0066 0000     		.space	2
+ 657 0068 00000000 		.word	htim3
+ 658 006c 04000000 		.word	4
+ 659 0070 00000000 		.space	20
+ 659      00000000 
+ 659      00000000 
+ 659      00000000 
+ 659      00000000 
+ 660              		.text
+ 661              	.Letext0:
+ 662              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 663              		.file 3 "Drivers/CMSIS/Include/core_cm4.h"
+ 664              		.file 4 "Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h"
+ 665              		.file 5 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stddef.h"
+ 666              		.file 6 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h"
+ 667              		.file 7 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_gpio.h"
+ 668              		.file 8 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_dma.h"
+ 669              		.file 9 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_tim.h"
+ 670              		.file 10 "Common/Inc/hcsr04.h"
+ 671              		.file 11 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/tim
+ 672              		.file 12 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/typ
+ 673              		.file 13 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
+ 674              		.file 14 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
+ 675              		.file 15 "Core/Inc/tim.h"
+ 676              		.file 16 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h"
+ARM GAS  /tmp/cc3iyEpZ.s 			page 17
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 hcsr04.c
+     /tmp/cc3iyEpZ.s:21     .text.process_capture:00000000 $t
+     /tmp/cc3iyEpZ.s:26     .text.process_capture:00000000 process_capture
+     /tmp/cc3iyEpZ.s:161    .text.process_capture:0000008c $d
+     /tmp/cc3iyEpZ.s:168    .text.hcsr04_init:00000000 $t
+     /tmp/cc3iyEpZ.s:174    .text.hcsr04_init:00000000 hcsr04_init
+     /tmp/cc3iyEpZ.s:222    .text.hcsr04_init:00000038 $d
+     /tmp/cc3iyEpZ.s:231    .text.hcsr04_trigger:00000000 $t
+     /tmp/cc3iyEpZ.s:237    .text.hcsr04_trigger:00000000 hcsr04_trigger
+     /tmp/cc3iyEpZ.s:338    .text.hcsr04_trigger:00000064 $d
+     /tmp/cc3iyEpZ.s:632    .data.hcsr04_sensors:00000000 hcsr04_sensors
+     /tmp/cc3iyEpZ.s:345    .text.hcsr04_trigger_all:00000000 $t
+     /tmp/cc3iyEpZ.s:351    .text.hcsr04_trigger_all:00000000 hcsr04_trigger_all
+     /tmp/cc3iyEpZ.s:394    .text.hcsr04_get_range_mm:00000000 $t
+     /tmp/cc3iyEpZ.s:400    .text.hcsr04_get_range_mm:00000000 hcsr04_get_range_mm
+     /tmp/cc3iyEpZ.s:427    .text.hcsr04_get_range_mm:00000018 $d
+     /tmp/cc3iyEpZ.s:433    .text.hcsr04_get_status:00000000 $t
+     /tmp/cc3iyEpZ.s:439    .text.hcsr04_get_status:00000000 hcsr04_get_status
+     /tmp/cc3iyEpZ.s:470    .text.hcsr04_get_status:00000018 $d
+     /tmp/cc3iyEpZ.s:475    .text.hcsr04_tim1_ic_callback:00000000 $t
+     /tmp/cc3iyEpZ.s:481    .text.hcsr04_tim1_ic_callback:00000000 hcsr04_tim1_ic_callback
+     /tmp/cc3iyEpZ.s:521    .text.hcsr04_tim1_ic_callback:0000001c $d
+     /tmp/cc3iyEpZ.s:526    .text.hcsr04_tim2_ic_callback:00000000 $t
+     /tmp/cc3iyEpZ.s:532    .text.hcsr04_tim2_ic_callback:00000000 hcsr04_tim2_ic_callback
+     /tmp/cc3iyEpZ.s:572    .text.hcsr04_tim2_ic_callback:0000001c $d
+     /tmp/cc3iyEpZ.s:577    .text.hcsr04_tim3_ic_callback:00000000 $t
+     /tmp/cc3iyEpZ.s:583    .text.hcsr04_tim3_ic_callback:00000000 hcsr04_tim3_ic_callback
+     /tmp/cc3iyEpZ.s:623    .text.hcsr04_tim3_ic_callback:0000001c $d
+     /tmp/cc3iyEpZ.s:629    .data.hcsr04_sensors:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_ReadPin
+HAL_TIM_IC_Start_IT
+htim1
+htim2
+htim3
+HAL_GPIO_WritePin
+HAL_RCC_GetHCLKFreq
+HAL_TIM_ReadCapturedValue

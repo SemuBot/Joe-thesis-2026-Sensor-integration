@@ -1,0 +1,13 @@
+obstacle_avoidance_node:
+  ros__parameters:
+
+    stop_dist:       0.35
+    clear_dist:      0.55
+    reverse_dist:    0.20
+
+    fwd_speed:       0.25
+    turn_speed:      0.80
+    strafe_speed:    0.20
+
+    turn_duration:    1.20
+    reverse_duration: 0.80

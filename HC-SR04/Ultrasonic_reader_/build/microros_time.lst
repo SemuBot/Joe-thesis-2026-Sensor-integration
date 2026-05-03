@@ -1,0 +1,116 @@
+ARM GAS  /tmp/ccnG55am.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"microros_time.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "micro_ros_stm32cubemx_utils/extra_sources/microros_time.c"
+  20              		.section	.text.clock_gettime,"ax",%progbits
+  21              		.align	1
+  22              		.global	clock_gettime
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	clock_gettime:
+  28              	.LVL0:
+  29              	.LFB130:
+   1:micro_ros_stm32cubemx_utils/extra_sources/microros_time.c **** #include <time.h>
+   2:micro_ros_stm32cubemx_utils/extra_sources/microros_time.c **** #include "stm32f3xx_hal.h"
+   3:micro_ros_stm32cubemx_utils/extra_sources/microros_time.c **** 
+   4:micro_ros_stm32cubemx_utils/extra_sources/microros_time.c **** int clock_gettime(clockid_t clock_id, struct timespec *tp)
+   5:micro_ros_stm32cubemx_utils/extra_sources/microros_time.c **** {
+  30              		.loc 1 5 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 5 1 is_stmt 0 view .LVU1
+  35 0000 10B5     		push	{r4, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 4, -8
+  39              		.cfi_offset 14, -4
+  40 0002 0C46     		mov	r4, r1
+   6:micro_ros_stm32cubemx_utils/extra_sources/microros_time.c ****     (void)clock_id;
+  41              		.loc 1 6 5 is_stmt 1 view .LVU2
+   7:micro_ros_stm32cubemx_utils/extra_sources/microros_time.c ****     uint32_t ms = HAL_GetTick();
+  42              		.loc 1 7 5 view .LVU3
+  43              		.loc 1 7 19 is_stmt 0 view .LVU4
+  44 0004 FFF7FEFF 		bl	HAL_GetTick
+  45              	.LVL1:
+  46              		.loc 1 7 19 view .LVU5
+  47 0008 0346     		mov	r3, r0
+  48              	.LVL2:
+   8:micro_ros_stm32cubemx_utils/extra_sources/microros_time.c ****     tp->tv_sec  = ms / 1000;
+  49              		.loc 1 8 5 is_stmt 1 view .LVU6
+  50              		.loc 1 8 22 is_stmt 0 view .LVU7
+ARM GAS  /tmp/ccnG55am.s 			page 2
+
+
+  51 000a 084A     		ldr	r2, .L3
+  52 000c A2FB0012 		umull	r1, r2, r2, r0
+  53 0010 9209     		lsrs	r2, r2, #6
+  54 0012 0020     		movs	r0, #0
+  55              	.LVL3:
+  56              		.loc 1 8 17 view .LVU8
+  57 0014 2260     		str	r2, [r4]
+  58 0016 6060     		str	r0, [r4, #4]
+   9:micro_ros_stm32cubemx_utils/extra_sources/microros_time.c ****     tp->tv_nsec = (ms % 1000) * 1000000;
+  59              		.loc 1 9 5 is_stmt 1 view .LVU9
+  60              		.loc 1 9 23 is_stmt 0 view .LVU10
+  61 0018 4FF47A71 		mov	r1, #1000
+  62 001c 01FB1233 		mls	r3, r1, r2, r3
+  63              	.LVL4:
+  64              		.loc 1 9 31 view .LVU11
+  65 0020 034A     		ldr	r2, .L3+4
+  66 0022 02FB03F3 		mul	r3, r2, r3
+  67              		.loc 1 9 17 view .LVU12
+  68 0026 A360     		str	r3, [r4, #8]
+  10:micro_ros_stm32cubemx_utils/extra_sources/microros_time.c ****     return 0;
+  69              		.loc 1 10 5 is_stmt 1 view .LVU13
+  11:micro_ros_stm32cubemx_utils/extra_sources/microros_time.c **** }
+  70              		.loc 1 11 1 is_stmt 0 view .LVU14
+  71 0028 10BD     		pop	{r4, pc}
+  72              	.LVL5:
+  73              	.L4:
+  74              		.loc 1 11 1 view .LVU15
+  75 002a 00BF     		.align	2
+  76              	.L3:
+  77 002c D34D6210 		.word	274877907
+  78 0030 40420F00 		.word	1000000
+  79              		.cfi_endproc
+  80              	.LFE130:
+  82              		.text
+  83              	.Letext0:
+  84              		.file 2 "/usr/include/newlib/machine/_default_types.h"
+  85              		.file 3 "/usr/include/newlib/sys/_types.h"
+  86              		.file 4 "/usr/include/newlib/sys/_stdint.h"
+  87              		.file 5 "/usr/include/newlib/sys/_timeval.h"
+  88              		.file 6 "/usr/include/newlib/sys/_timespec.h"
+  89              		.file 7 "/usr/include/newlib/sys/types.h"
+  90              		.file 8 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h"
+ARM GAS  /tmp/ccnG55am.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 microros_time.c
+     /tmp/ccnG55am.s:21     .text.clock_gettime:00000000 $t
+     /tmp/ccnG55am.s:27     .text.clock_gettime:00000000 clock_gettime
+     /tmp/ccnG55am.s:77     .text.clock_gettime:0000002c $d
+
+UNDEFINED SYMBOLS
+HAL_GetTick

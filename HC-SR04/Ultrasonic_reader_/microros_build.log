@@ -1,0 +1,303 @@
+dos2unix: converting file /project/micro_ros_stm32cubemx_utils/microros_static_library/library_generation/library_generation.sh to Unix format...
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Get:1 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Get:2 http://archive.ubuntu.com/ubuntu noble InRelease [256 kB]
+Get:3 http://packages.ros.org/ros2/ubuntu noble InRelease [4676 B]
+Get:4 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Packages [34.8 kB]
+Get:5 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [3521 kB]
+Get:6 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Get:7 http://packages.ros.org/ros2/ubuntu noble/main Sources [1984 kB]
+Get:8 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Get:9 http://archive.ubuntu.com/ubuntu noble/multiverse amd64 Packages [331 kB]
+Get:10 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages [1808 kB]
+Get:11 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages [19.3 MB]
+Get:12 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1509 kB]
+Get:13 http://packages.ros.org/ros2/ubuntu noble/main amd64 Packages [1862 kB]
+Get:14 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1998 kB]
+Get:15 http://archive.ubuntu.com/ubuntu noble/restricted amd64 Packages [117 kB]
+Get:16 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [3738 kB]
+Get:17 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [2395 kB]
+Get:18 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [38.5 kB]
+Get:19 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [2156 kB]
+Get:20 http://archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [49.5 kB]
+Get:21 http://archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [36.1 kB]
+Get:22 http://archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Packages [695 B]
+Fetched 41.5 MB in 4s (11.7 MB/s)
+Reading package lists...
+Building dependency tree...
+Reading state information...
+324 packages can be upgraded. Run 'apt list --upgradable' to see them.
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  binutils-arm-none-eabi libnewlib-arm-none-eabi libnewlib-dev
+  libstdc++-arm-none-eabi-dev libstdc++-arm-none-eabi-newlib
+Suggested packages:
+  libnewlib-doc
+The following NEW packages will be installed:
+  binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi
+  libnewlib-dev libstdc++-arm-none-eabi-dev libstdc++-arm-none-eabi-newlib
+0 upgraded, 6 newly installed, 0 to remove and 324 not upgraded.
+Need to get 574 MB of archives.
+After this operation, 3106 MB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu noble/universe amd64 binutils-arm-none-eabi amd64 2.42-1ubuntu1+23 [3137 kB]
+Get:2 http://archive.ubuntu.com/ubuntu noble/universe amd64 gcc-arm-none-eabi amd64 15:13.2.rel1-2 [57.5 MB]
+Get:3 http://archive.ubuntu.com/ubuntu noble/universe amd64 libstdc++-arm-none-eabi-dev all 15:13.2.rel1-2+26 [1320 kB]
+Get:4 http://archive.ubuntu.com/ubuntu noble/universe amd64 libnewlib-dev all 4.4.0.20231231-2 [140 kB]
+Get:5 http://archive.ubuntu.com/ubuntu noble/universe amd64 libnewlib-arm-none-eabi all 4.4.0.20231231-2 [49.2 MB]
+Get:6 http://archive.ubuntu.com/ubuntu noble/universe amd64 libstdc++-arm-none-eabi-newlib all 15:13.2.rel1-2+26 [463 MB]
+debconf: delaying package configuration, since apt-utils is not installed
+Fetched 574 MB in 42s (13.7 MB/s)
+Selecting previously unselected package binutils-arm-none-eabi.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 46955 files and directories currently installed.)
+Preparing to unpack .../0-binutils-arm-none-eabi_2.42-1ubuntu1+23_amd64.deb ...
+Unpacking binutils-arm-none-eabi (2.42-1ubuntu1+23) ...
+Selecting previously unselected package gcc-arm-none-eabi.
+Preparing to unpack .../1-gcc-arm-none-eabi_15%3a13.2.rel1-2_amd64.deb ...
+Unpacking gcc-arm-none-eabi (15:13.2.rel1-2) ...
+Selecting previously unselected package libstdc++-arm-none-eabi-dev.
+Preparing to unpack .../2-libstdc++-arm-none-eabi-dev_15%3a13.2.rel1-2+26_all.deb ...
+Unpacking libstdc++-arm-none-eabi-dev (15:13.2.rel1-2+26) ...
+Selecting previously unselected package libnewlib-dev.
+Preparing to unpack .../3-libnewlib-dev_4.4.0.20231231-2_all.deb ...
+Unpacking libnewlib-dev (4.4.0.20231231-2) ...
+Selecting previously unselected package libnewlib-arm-none-eabi.
+Preparing to unpack .../4-libnewlib-arm-none-eabi_4.4.0.20231231-2_all.deb ...
+Unpacking libnewlib-arm-none-eabi (4.4.0.20231231-2) ...
+Selecting previously unselected package libstdc++-arm-none-eabi-newlib.
+Preparing to unpack .../5-libstdc++-arm-none-eabi-newlib_15%3a13.2.rel1-2+26_all.deb ...
+Unpacking libstdc++-arm-none-eabi-newlib (15:13.2.rel1-2+26) ...
+Setting up binutils-arm-none-eabi (2.42-1ubuntu1+23) ...
+Setting up gcc-arm-none-eabi (15:13.2.rel1-2) ...
+Setting up libnewlib-dev (4.4.0.20231231-2) ...
+Setting up libnewlib-arm-none-eabi (4.4.0.20231231-2) ...
+Setting up libstdc++-arm-none-eabi-dev (15:13.2.rel1-2+26) ...
+Setting up libstdc++-arm-none-eabi-newlib (15:13.2.rel1-2+26) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.5) ...
+Creating firmware for generate_lib platform generic
+/usr/bin/vcs:6: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import load_entry_point
+.......
+=== ./ament/ament_cmake (git) ===
+Cloning into '.'...
+=== ./ament/ament_index (git) ===
+Cloning into '.'...
+=== ./ament/ament_lint (git) ===
+Cloning into '.'...
+=== ./ament/ament_package (git) ===
+Cloning into '.'...
+=== ./ament/googletest (git) ===
+Cloning into '.'...
+=== ./ament/uncrustify_vendor (git) ===
+Cloning into '.'...
+=== ./ros2/ament_cmake_ros (git) ===
+Cloning into '.'...
+/usr/bin/vcs:6: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import load_entry_point
+List of repositories is empty
+/usr/bin/rosdep:6: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import load_entry_point
+#All required rosdeps installed successfully
+/usr/bin/vcs:6: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import load_entry_point
+.................
+=== ./ros2/common_interfaces (git) ===
+Cloning into '.'...
+=== ./ros2/example_interfaces (git) ===
+Cloning into '.'...
+=== ./ros2/libyaml_vendor (git) ===
+Cloning into '.'...
+=== ./ros2/rcl (git) ===
+Cloning into '.'...
+=== ./ros2/rcl_interfaces (git) ===
+Cloning into '.'...
+=== ./ros2/rcl_logging (git) ===
+Cloning into '.'...
+=== ./ros2/rcpputils (git) ===
+Cloning into '.'...
+=== ./ros2/rmw (git) ===
+Cloning into '.'...
+=== ./ros2/rmw_implementation (git) ===
+Cloning into '.'...
+=== ./ros2/ros2_tracing (git) ===
+Cloning into '.'...
+=== ./ros2/rosidl (git) ===
+Cloning into '.'...
+=== ./ros2/rosidl_core (git) ===
+Cloning into '.'...
+=== ./ros2/rosidl_dds (git) ===
+Cloning into '.'...
+=== ./ros2/rosidl_defaults (git) ===
+Cloning into '.'...
+=== ./ros2/rosidl_dynamic_typesupport (git) ===
+Cloning into '.'...
+=== ./ros2/test_interface_files (git) ===
+Cloning into '.'...
+=== ./ros2/unique_identifier_msgs (git) ===
+Cloning into '.'...
+/usr/bin/vcs:6: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import load_entry_point
+..........
+=== ./eProsima/Micro-CDR (git) ===
+Cloning into '.'...
+=== ./eProsima/Micro-XRCE-DDS-Client (git) ===
+Cloning into '.'...
+=== ./uros/micro_ros_msgs (git) ===
+Cloning into '.'...
+=== ./uros/micro_ros_utilities (git) ===
+Cloning into '.'...
+=== ./uros/rcl (git) ===
+Cloning into '.'...
+=== ./uros/rclc (git) ===
+Cloning into '.'...
+=== ./uros/rcutils (git) ===
+Cloning into '.'...
+=== ./uros/rmw_microxrcedds (git) ===
+Cloning into '.'...
+=== ./uros/rosidl_typesupport (git) ===
+Cloning into '.'...
+=== ./uros/rosidl_typesupport_microxrcedds (git) ===
+Cloning into '.'...
+Crosscompiled environment: cleaning path
+Starting >>> ament_package
+Starting >>> ament_lint
+Starting >>> gtest_vendor
+Starting >>> ament_pycodestyle
+Finished <<< gtest_vendor [0.78s]
+Starting >>> gmock_vendor
+Finished <<< gmock_vendor [0.12s]
+Finished <<< ament_lint [2.11s]
+Starting >>> ament_flake8
+Finished <<< ament_pycodestyle [2.14s]
+Finished <<< ament_package [2.16s]
+Starting >>> ament_cmake_core
+Starting >>> ament_pyflakes
+Finished <<< ament_cmake_core [0.66s]
+Starting >>> ament_cmake_python
+Starting >>> ament_cmake_libraries
+Starting >>> ament_cmake_export_libraries
+Starting >>> ament_cmake_include_directories
+Starting >>> ament_cmake_export_definitions
+Starting >>> ament_cmake_export_include_directories
+Starting >>> ament_cmake_export_link_flags
+Starting >>> ament_cmake_version
+Finished <<< ament_cmake_export_definitions [0.57s]
+Finished <<< ament_flake8 [1.29s]
+Finished <<< ament_pyflakes [1.26s]
+Starting >>> ament_pep257
+Starting >>> ament_mypy
+Finished <<< ament_cmake_python [0.64s]
+Finished <<< ament_cmake_export_include_directories [0.64s]
+Finished <<< ament_cmake_export_libraries [0.66s]
+Starting >>> ament_cmake_test
+Starting >>> ament_cmake_export_interfaces
+Starting >>> ament_cmake_export_targets
+Finished <<< ament_cmake_include_directories [0.69s]
+Finished <<< ament_cmake_libraries [1.07s]
+Starting >>> ament_cmake_export_dependencies
+Starting >>> ament_cmake_target_dependencies
+Finished <<< ament_cmake_version [1.09s]
+Finished <<< ament_cmake_export_link_flags [1.11s]
+Finished <<< ament_cmake_export_targets [0.89s]
+Finished <<< ament_cmake_export_interfaces [0.91s]
+Finished <<< ament_cmake_target_dependencies [0.55s]
+Finished <<< ament_cmake_export_dependencies [0.58s]
+Finished <<< ament_pep257 [1.36s]
+Starting >>> ament_copyright
+Finished <<< ament_mypy [1.39s]
+Finished <<< ament_cmake_test [1.61s]
+Starting >>> ament_cmake_gtest
+Starting >>> ament_cmake_vendor_package
+Starting >>> ament_lint_auto
+Starting >>> ament_cmake_pytest
+Starting >>> ament_cmake_google_benchmark
+Finished <<< ament_lint_auto [0.50s]
+Finished <<< ament_cmake_gtest [0.54s]
+Starting >>> ament_cmake_gen_version_h
+Starting >>> ament_cmake_gmock
+Finished <<< ament_cmake_pytest [0.80s]
+Finished <<< ament_copyright [1.16s]
+Starting >>> ament_lint_cmake
+Starting >>> ament_cppcheck
+Starting >>> ament_cpplint
+Starting >>> ament_xmllint
+Starting >>> ament_clang_format
+Starting >>> ament_clang_tidy
+Starting >>> ament_pclint
+Starting >>> domain_coordinator
+Starting >>> ament_index_python
+Finished <<< ament_cmake_google_benchmark [2.65s]
+Finished <<< ament_cmake_gmock [2.14s]
+Finished <<< ament_clang_tidy [2.94s]
+Finished <<< ament_pclint [2.97s]
+Finished <<< ament_lint_cmake [3.03s]
+Starting >>> ament_cmake_lint_cmake
+Finished <<< ament_clang_format [3.04s]
+Finished <<< ament_cppcheck [3.07s]
+Finished <<< ament_cpplint [3.09s]
+Finished <<< domain_coordinator [3.08s]
+Finished <<< ament_index_python [3.10s]
+Finished <<< ament_xmllint [3.13s]
+Finished <<< ament_cmake_lint_cmake [0.53s]
+Starting >>> ament_cmake_copyright
+Finished <<< ament_cmake_vendor_package [4.57s]
+Finished <<< ament_cmake_copyright [0.53s]
+Starting >>> ament_cmake_cppcheck
+Starting >>> ament_cmake_cpplint
+Starting >>> ament_cmake_flake8
+Starting >>> ament_cmake_pep257
+Starting >>> ament_cmake_xmllint
+Starting >>> ament_cmake_clang_format
+Starting >>> ament_cmake_clang_tidy
+Starting >>> ament_cmake_mypy
+Starting >>> ament_cmake_pclint
+Starting >>> ament_cmake_pycodestyle
+Starting >>> ament_cmake_pyflakes
+Finished <<< ament_cmake_flake8 [0.70s]
+Finished <<< ament_cmake_clang_format [0.71s]
+Finished <<< ament_cmake_clang_tidy [0.72s]
+Finished <<< ament_cmake_pep257 [0.75s]
+Finished <<< ament_cmake_pycodestyle [0.74s]
+Finished <<< ament_cmake_cppcheck [0.79s]
+Finished <<< ament_cmake_xmllint [0.80s]
+Finished <<< ament_cmake_pclint [0.81s]
+Finished <<< ament_cmake_mypy [0.82s]
+Finished <<< ament_cmake_cpplint [0.86s]
+Finished <<< ament_cmake_pyflakes [0.84s]
+Finished <<< ament_cmake_gen_version_h [7.54s]
+Starting >>> ament_cmake
+Finished <<< ament_cmake [0.58s]
+Starting >>> uncrustify_vendor
+Starting >>> ament_cmake_auto
+Finished <<< ament_cmake_auto [0.55s]
+Finished <<< uncrustify_vendor [1.01s]
+Starting >>> ament_uncrustify
+Finished <<< ament_uncrustify [1.03s]
+Starting >>> ament_cmake_uncrustify
+Finished <<< ament_cmake_uncrustify [0.61s]
+Starting >>> ament_lint_common
+Finished <<< ament_lint_common [0.59s]
+Starting >>> ament_cmake_ros
+Starting >>> ament_index_cpp
+Finished <<< ament_cmake_ros [0.76s]
+Finished <<< ament_index_cpp [7.11s]
+
+Summary: 61 packages finished [24.4s]
+/usr/bin/rosdep:6: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import load_entry_point
+#All required rosdeps installed successfully
+Cloning into 'geometry2'...
+/usr/bin/vcs:6: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import load_entry_point
+=== ./control_msgs (git) ===
+Cloning into '.'...
+Found CFLAGS:
+-------------
+-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard -DUSE_HAL_DRIVER -DSTM32F303xE -ICore/Inc -IDrivers/STM32F3xx_HAL_Driver/Inc/Legacy -IDrivers/STM32F3xx_HAL_Driver/Inc -IMiddlewares/Third_Party/FreeRTOS/Source/include -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -IDrivers/CMSIS/Device/ST/STM32F3xx/Include -IDrivers/CMSIS/Include -Imicro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include -Og -Wall -fdata-sections -ffunction-sections -g -gdwarf-2 -MMD -MP -MFprint_cflags
+-------------

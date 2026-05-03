@@ -1,0 +1,388 @@
+ARM GAS  /tmp/cc5w2btm.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"measurement.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Common/Src/measurement.c"
+  20              		.section	.text.avg_update,"ax",%progbits
+  21              		.align	1
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	avg_update:
+  27              	.LVL0:
+  28              	.LFB130:
+   1:Common/Src/measurement.c **** 
+   2:Common/Src/measurement.c **** #include "hcsr04.h"
+   3:Common/Src/measurement.c **** #include "measurement.h"
+   4:Common/Src/measurement.c **** 
+   5:Common/Src/measurement.c **** 
+   6:Common/Src/measurement.c **** 
+   7:Common/Src/measurement.c **** static float 	avg_range[HCSR04_NUM_SENSORS][SMOOTH_WINDOW];
+   8:Common/Src/measurement.c **** static uint8_t  avg_idx[HCSR04_NUM_SENSORS];
+   9:Common/Src/measurement.c **** static uint8_t  avg_count[HCSR04_NUM_SENSORS];
+  10:Common/Src/measurement.c **** 
+  11:Common/Src/measurement.c **** /**
+  12:Common/Src/measurement.c ****  * @brief  Add a new sample to the moving average buffer for a sensor
+  13:Common/Src/measurement.c ****  * @details Uses a circular buffer — oldest sample is overwritten when
+  14:Common/Src/measurement.c ****  *          the buffer is full. Buffer size is defined by SMOOTH_WINDOW.
+  15:Common/Src/measurement.c ****  *
+  16:Common/Src/measurement.c ****  * @param  sensor_index  Index of the sensor (0 to HCSR04_NUM_SENSORS-1)
+  17:Common/Src/measurement.c ****  * @param  range_mm      New distance sample in millimeters to add to buffer
+  18:Common/Src/measurement.c ****  */
+  19:Common/Src/measurement.c **** static void avg_update(uint8_t sensor_index, float range_mm)
+  20:Common/Src/measurement.c **** {
+  29              		.loc 1 20 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34              		.loc 1 20 1 is_stmt 0 view .LVU1
+  35 0000 10B4     		push	{r4}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 4
+  38              		.cfi_offset 4, -4
+ARM GAS  /tmp/cc5w2btm.s 			page 2
+
+
+  21:Common/Src/measurement.c **** 	uint8_t index = 				avg_idx[sensor_index];
+  39              		.loc 1 21 2 is_stmt 1 view .LVU2
+  40              		.loc 1 21 10 is_stmt 0 view .LVU3
+  41 0002 0E4C     		ldr	r4, .L4
+  42 0004 225C     		ldrb	r2, [r4, r0]	@ zero_extendqisi2
+  43              	.LVL1:
+  22:Common/Src/measurement.c **** 	avg_range[sensor_index][index] = 	range_mm;
+  44              		.loc 1 22 2 is_stmt 1 view .LVU4
+  45              		.loc 1 22 33 is_stmt 0 view .LVU5
+  46 0006 00EB8001 		add	r1, r0, r0, lsl #2
+  47 000a 1144     		add	r1, r1, r2
+  48 000c 0C4B     		ldr	r3, .L4+4
+  49 000e 03EB8103 		add	r3, r3, r1, lsl #2
+  50 0012 83ED000A 		vstr.32	s0, [r3]
+  23:Common/Src/measurement.c **** 	avg_idx[sensor_index] = 		(index + 1) % SMOOTH_WINDOW;
+  51              		.loc 1 23 2 is_stmt 1 view .LVU6
+  52              		.loc 1 23 35 is_stmt 0 view .LVU7
+  53 0016 0132     		adds	r2, r2, #1
+  54              	.LVL2:
+  55              		.loc 1 23 40 view .LVU8
+  56 0018 0A4B     		ldr	r3, .L4+8
+  57 001a 83FB0213 		smull	r1, r3, r3, r2
+  58 001e 5B10     		asrs	r3, r3, #1
+  59 0020 03EB8303 		add	r3, r3, r3, lsl #2
+  60 0024 D31A     		subs	r3, r2, r3
+  61              		.loc 1 23 24 view .LVU9
+  62 0026 2354     		strb	r3, [r4, r0]
+  24:Common/Src/measurement.c **** 	if (avg_count[sensor_index] < SMOOTH_WINDOW) avg_count[sensor_index]++;
+  63              		.loc 1 24 2 is_stmt 1 view .LVU10
+  64              		.loc 1 24 15 is_stmt 0 view .LVU11
+  65 0028 074B     		ldr	r3, .L4+12
+  66 002a 1B5C     		ldrb	r3, [r3, r0]	@ zero_extendqisi2
+  67              		.loc 1 24 5 view .LVU12
+  68 002c 042B     		cmp	r3, #4
+  69 002e 02D8     		bhi	.L1
+  70              		.loc 1 24 47 is_stmt 1 discriminator 1 view .LVU13
+  71              		.loc 1 24 70 is_stmt 0 discriminator 1 view .LVU14
+  72 0030 0133     		adds	r3, r3, #1
+  73 0032 054A     		ldr	r2, .L4+12
+  74              	.LVL3:
+  75              		.loc 1 24 70 discriminator 1 view .LVU15
+  76 0034 1354     		strb	r3, [r2, r0]
+  77              	.L1:
+  25:Common/Src/measurement.c **** }
+  78              		.loc 1 25 1 view .LVU16
+  79 0036 5DF8044B 		ldr	r4, [sp], #4
+  80              	.LCFI1:
+  81              		.cfi_restore 4
+  82              		.cfi_def_cfa_offset 0
+  83 003a 7047     		bx	lr
+  84              	.L5:
+  85              		.align	2
+  86              	.L4:
+  87 003c 00000000 		.word	avg_idx
+  88 0040 00000000 		.word	avg_range
+  89 0044 67666666 		.word	1717986919
+  90 0048 00000000 		.word	avg_count
+ARM GAS  /tmp/cc5w2btm.s 			page 3
+
+
+  91              		.cfi_endproc
+  92              	.LFE130:
+  94              		.section	.text.avg_get,"ax",%progbits
+  95              		.align	1
+  96              		.syntax unified
+  97              		.thumb
+  98              		.thumb_func
+ 100              	avg_get:
+ 101              	.LVL4:
+ 102              	.LFB131:
+  26:Common/Src/measurement.c **** 
+  27:Common/Src/measurement.c **** 
+  28:Common/Src/measurement.c **** 
+  29:Common/Src/measurement.c **** /**
+  30:Common/Src/measurement.c ****  * @brief  Calculate and retrieve the current moving average for a sensor
+  31:Common/Src/measurement.c ****  * @details Computes the arithmetic mean of all valid samples currently
+  32:Common/Src/measurement.c ****  *          in the buffer. Returns 0 if no samples have been collected yet.
+  33:Common/Src/measurement.c ****  *
+  34:Common/Src/measurement.c ****  * @param  sensor_index  Index of the sensor (0 to HCSR04_NUM_SENSORS-1)
+  35:Common/Src/measurement.c ****  * @param  out           Output pointer — receives the average distance in mm
+  36:Common/Src/measurement.c ****  */
+  37:Common/Src/measurement.c **** static void avg_get(uint8_t sensor_index, float *out)
+  38:Common/Src/measurement.c **** {
+ 103              		.loc 1 38 1 is_stmt 1 view -0
+ 104              		.cfi_startproc
+ 105              		@ args = 0, pretend = 0, frame = 0
+ 106              		@ frame_needed = 0, uses_anonymous_args = 0
+ 107              		@ link register save eliminated.
+ 108              		.loc 1 38 1 is_stmt 0 view .LVU18
+ 109 0000 10B4     		push	{r4}
+ 110              	.LCFI2:
+ 111              		.cfi_def_cfa_offset 4
+ 112              		.cfi_offset 4, -4
+  39:Common/Src/measurement.c **** 	uint8_t count = avg_count[sensor_index];
+ 113              		.loc 1 39 2 is_stmt 1 view .LVU19
+ 114              		.loc 1 39 10 is_stmt 0 view .LVU20
+ 115 0002 114B     		ldr	r3, .L13
+ 116 0004 1C5C     		ldrb	r4, [r3, r0]	@ zero_extendqisi2
+ 117              	.LVL5:
+  40:Common/Src/measurement.c **** 	if (count == 0) {
+ 118              		.loc 1 40 2 is_stmt 1 view .LVU21
+ 119              		.loc 1 40 5 is_stmt 0 view .LVU22
+ 120 0006 1CB1     		cbz	r4, .L12
+ 121              	.LBB2:
+  41:Common/Src/measurement.c **** 		*out = 0.0f;
+  42:Common/Src/measurement.c **** 		return;
+  43:Common/Src/measurement.c **** 	}
+  44:Common/Src/measurement.c **** 
+  45:Common/Src/measurement.c **** 	float sum_range = 0;
+  46:Common/Src/measurement.c **** 	for(uint8_t i = 0; i < count; i++){
+ 122              		.loc 1 46 14 view .LVU23
+ 123 0008 0023     		movs	r3, #0
+ 124              	.LBE2:
+  45:Common/Src/measurement.c **** 	for(uint8_t i = 0; i < count; i++){
+ 125              		.loc 1 45 8 view .LVU24
+ 126 000a 9FED107A 		vldr.32	s14, .L13+4
+ 127 000e 0EE0     		b	.L7
+ARM GAS  /tmp/cc5w2btm.s 			page 4
+
+
+ 128              	.L12:
+  41:Common/Src/measurement.c **** 		*out = 0.0f;
+ 129              		.loc 1 41 3 is_stmt 1 view .LVU25
+  41:Common/Src/measurement.c **** 		*out = 0.0f;
+ 130              		.loc 1 41 8 is_stmt 0 view .LVU26
+ 131 0010 0023     		movs	r3, #0
+ 132 0012 0B60     		str	r3, [r1]	@ float
+  42:Common/Src/measurement.c **** 	}
+ 133              		.loc 1 42 3 is_stmt 1 view .LVU27
+ 134 0014 15E0     		b	.L6
+ 135              	.LVL6:
+ 136              	.L9:
+ 137              	.LBB3:
+  47:Common/Src/measurement.c **** 		sum_range += avg_range[sensor_index][i];
+ 138              		.loc 1 47 3 view .LVU28
+ 139              		.loc 1 47 39 is_stmt 0 view .LVU29
+ 140 0016 00EB800C 		add	ip, r0, r0, lsl #2
+ 141 001a 9C44     		add	ip, ip, r3
+ 142 001c 0C4A     		ldr	r2, .L13+8
+ 143 001e 02EB8C02 		add	r2, r2, ip, lsl #2
+ 144 0022 D2ED007A 		vldr.32	s15, [r2]
+ 145              		.loc 1 47 13 view .LVU30
+ 146 0026 37EE277A 		vadd.f32	s14, s14, s15
+ 147              	.LVL7:
+  46:Common/Src/measurement.c **** 		sum_range += avg_range[sensor_index][i];
+ 148              		.loc 1 46 33 is_stmt 1 discriminator 3 view .LVU31
+ 149 002a 0133     		adds	r3, r3, #1
+ 150              	.LVL8:
+  46:Common/Src/measurement.c **** 		sum_range += avg_range[sensor_index][i];
+ 151              		.loc 1 46 33 is_stmt 0 discriminator 3 view .LVU32
+ 152 002c DBB2     		uxtb	r3, r3
+ 153              	.LVL9:
+ 154              	.L7:
+  46:Common/Src/measurement.c **** 		sum_range += avg_range[sensor_index][i];
+ 155              		.loc 1 46 23 is_stmt 1 discriminator 1 view .LVU33
+ 156 002e A342     		cmp	r3, r4
+ 157 0030 F1D3     		bcc	.L9
+ 158              	.LBE3:
+  48:Common/Src/measurement.c **** 	}
+  49:Common/Src/measurement.c **** 	*out = sum_range / count;
+ 159              		.loc 1 49 2 view .LVU34
+ 160              		.loc 1 49 19 is_stmt 0 view .LVU35
+ 161 0032 07EE904A 		vmov	s15, r4	@ int
+ 162 0036 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 163 003a C7EE276A 		vdiv.f32	s13, s14, s15
+ 164              		.loc 1 49 7 view .LVU36
+ 165 003e C1ED006A 		vstr.32	s13, [r1]
+ 166              	.LVL10:
+ 167              	.L6:
+  50:Common/Src/measurement.c **** }
+ 168              		.loc 1 50 1 view .LVU37
+ 169 0042 5DF8044B 		ldr	r4, [sp], #4
+ 170              	.LCFI3:
+ 171              		.cfi_restore 4
+ 172              		.cfi_def_cfa_offset 0
+ 173              	.LVL11:
+ 174              		.loc 1 50 1 view .LVU38
+ARM GAS  /tmp/cc5w2btm.s 			page 5
+
+
+ 175 0046 7047     		bx	lr
+ 176              	.L14:
+ 177              		.align	2
+ 178              	.L13:
+ 179 0048 00000000 		.word	avg_count
+ 180 004c 00000000 		.word	0
+ 181 0050 00000000 		.word	avg_range
+ 182              		.cfi_endproc
+ 183              	.LFE131:
+ 185              		.section	.text.measurement_update,"ax",%progbits
+ 186              		.align	1
+ 187              		.global	measurement_update
+ 188              		.syntax unified
+ 189              		.thumb
+ 190              		.thumb_func
+ 192              	measurement_update:
+ 193              	.LVL12:
+ 194              	.LFB132:
+  51:Common/Src/measurement.c **** 
+  52:Common/Src/measurement.c **** 
+  53:Common/Src/measurement.c **** 
+  54:Common/Src/measurement.c **** void measurement_update(uint8_t sensor_index, hcsr04_sensor_t *sensor, float *avg_out)
+  55:Common/Src/measurement.c **** {
+ 195              		.loc 1 55 1 is_stmt 1 view -0
+ 196              		.cfi_startproc
+ 197              		@ args = 0, pretend = 0, frame = 0
+ 198              		@ frame_needed = 0, uses_anonymous_args = 0
+ 199              		.loc 1 55 1 is_stmt 0 view .LVU40
+ 200 0000 38B5     		push	{r3, r4, r5, lr}
+ 201              	.LCFI4:
+ 202              		.cfi_def_cfa_offset 16
+ 203              		.cfi_offset 3, -16
+ 204              		.cfi_offset 4, -12
+ 205              		.cfi_offset 5, -8
+ 206              		.cfi_offset 14, -4
+ 207 0002 0446     		mov	r4, r0
+ 208 0004 1546     		mov	r5, r2
+  56:Common/Src/measurement.c ****     float mm;
+ 209              		.loc 1 56 5 is_stmt 1 view .LVU41
+  57:Common/Src/measurement.c ****     if (sensor->range_mm <= HCSR04_MIN_RANGE_MM)
+ 210              		.loc 1 57 5 view .LVU42
+ 211              		.loc 1 57 15 is_stmt 0 view .LVU43
+ 212 0006 91ED090A 		vldr.32	s0, [r1, #36]
+ 213              		.loc 1 57 8 view .LVU44
+ 214 000a F3EE047A 		vmov.f32	s15, #2.0e+1
+ 215 000e B4EEE70A 		vcmpe.f32	s0, s15
+ 216 0012 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 217 0016 09D9     		bls	.L18
+  58:Common/Src/measurement.c ****         mm = HCSR04_MIN_RANGE_MM;
+  59:Common/Src/measurement.c ****     else if (sensor->range_mm >= HCSR04_MAX_RANGE_MM)
+ 218              		.loc 1 59 10 is_stmt 1 view .LVU45
+ 219              		.loc 1 59 13 is_stmt 0 view .LVU46
+ 220 0018 DFED097A 		vldr.32	s15, .L21
+ 221 001c B4EEE70A 		vcmpe.f32	s0, s15
+ 222 0020 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 223 0024 04DB     		blt	.L16
+  60:Common/Src/measurement.c ****         mm = HCSR04_MAX_RANGE_MM;
+ARM GAS  /tmp/cc5w2btm.s 			page 6
+
+
+ 224              		.loc 1 60 12 view .LVU47
+ 225 0026 B0EE670A 		vmov.f32	s0, s15
+ 226 002a 01E0     		b	.L16
+ 227              	.L18:
+  58:Common/Src/measurement.c ****         mm = HCSR04_MIN_RANGE_MM;
+ 228              		.loc 1 58 12 view .LVU48
+ 229 002c B3EE040A 		vmov.f32	s0, #2.0e+1
+ 230              	.L16:
+ 231              	.LVL13:
+  61:Common/Src/measurement.c ****     else
+  62:Common/Src/measurement.c ****         mm = sensor->range_mm;
+  63:Common/Src/measurement.c **** 
+  64:Common/Src/measurement.c ****     avg_update(sensor_index, mm);
+ 232              		.loc 1 64 5 is_stmt 1 view .LVU49
+ 233 0030 2046     		mov	r0, r4
+ 234              	.LVL14:
+ 235              		.loc 1 64 5 is_stmt 0 view .LVU50
+ 236 0032 FFF7FEFF 		bl	avg_update
+ 237              	.LVL15:
+  65:Common/Src/measurement.c ****     avg_get(sensor_index, avg_out);
+ 238              		.loc 1 65 5 is_stmt 1 view .LVU51
+ 239 0036 2946     		mov	r1, r5
+ 240 0038 2046     		mov	r0, r4
+ 241 003a FFF7FEFF 		bl	avg_get
+ 242              	.LVL16:
+  66:Common/Src/measurement.c **** }
+ 243              		.loc 1 66 1 is_stmt 0 view .LVU52
+ 244 003e 38BD     		pop	{r3, r4, r5, pc}
+ 245              	.LVL17:
+ 246              	.L22:
+ 247              		.loc 1 66 1 view .LVU53
+ 248              		.align	2
+ 249              	.L21:
+ 250 0040 00007A45 		.word	1165623296
+ 251              		.cfi_endproc
+ 252              	.LFE132:
+ 254              		.section	.bss.avg_count,"aw",%nobits
+ 255              		.align	2
+ 258              	avg_count:
+ 259 0000 000000   		.space	3
+ 260              		.section	.bss.avg_idx,"aw",%nobits
+ 261              		.align	2
+ 264              	avg_idx:
+ 265 0000 000000   		.space	3
+ 266              		.section	.bss.avg_range,"aw",%nobits
+ 267              		.align	2
+ 270              	avg_range:
+ 271 0000 00000000 		.space	60
+ 271      00000000 
+ 271      00000000 
+ 271      00000000 
+ 271      00000000 
+ 272              		.text
+ 273              	.Letext0:
+ 274              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 275              		.file 3 "Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h"
+ 276              		.file 4 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h"
+ARM GAS  /tmp/cc5w2btm.s 			page 7
+
+
+ 277              		.file 5 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_dma.h"
+ 278              		.file 6 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_tim.h"
+ 279              		.file 7 "Common/Inc/hcsr04.h"
+ARM GAS  /tmp/cc5w2btm.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 measurement.c
+     /tmp/cc5w2btm.s:21     .text.avg_update:00000000 $t
+     /tmp/cc5w2btm.s:26     .text.avg_update:00000000 avg_update
+     /tmp/cc5w2btm.s:87     .text.avg_update:0000003c $d
+     /tmp/cc5w2btm.s:264    .bss.avg_idx:00000000 avg_idx
+     /tmp/cc5w2btm.s:270    .bss.avg_range:00000000 avg_range
+     /tmp/cc5w2btm.s:258    .bss.avg_count:00000000 avg_count
+     /tmp/cc5w2btm.s:95     .text.avg_get:00000000 $t
+     /tmp/cc5w2btm.s:100    .text.avg_get:00000000 avg_get
+     /tmp/cc5w2btm.s:179    .text.avg_get:00000048 $d
+     /tmp/cc5w2btm.s:186    .text.measurement_update:00000000 $t
+     /tmp/cc5w2btm.s:192    .text.measurement_update:00000000 measurement_update
+     /tmp/cc5w2btm.s:250    .text.measurement_update:00000040 $d
+     /tmp/cc5w2btm.s:255    .bss.avg_count:00000000 $d
+     /tmp/cc5w2btm.s:261    .bss.avg_idx:00000000 $d
+     /tmp/cc5w2btm.s:267    .bss.avg_range:00000000 $d
+
+NO UNDEFINED SYMBOLS

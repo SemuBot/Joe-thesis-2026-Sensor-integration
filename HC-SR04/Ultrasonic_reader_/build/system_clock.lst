@@ -1,0 +1,260 @@
+ARM GAS  /tmp/cckIlzlq.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"system_clock.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/system_clock.c"
+  20              		.section	.text.SystemClock_Config,"ax",%progbits
+  21              		.align	1
+  22              		.global	SystemClock_Config
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	SystemClock_Config:
+  28              	.LFB134:
+   1:Core/Src/system_clock.c **** /*
+   2:Core/Src/system_clock.c ****  * system_clock.c
+   3:Core/Src/system_clock.c ****  *
+   4:Core/Src/system_clock.c ****  *  Created on: Apr 5, 2026
+   5:Core/Src/system_clock.c ****  *      Author: aleks
+   6:Core/Src/system_clock.c ****  */
+   7:Core/Src/system_clock.c **** 
+   8:Core/Src/system_clock.c **** #include "system_clock.h"
+   9:Core/Src/system_clock.c **** #include "main.h"
+  10:Core/Src/system_clock.c **** 
+  11:Core/Src/system_clock.c **** /**
+  12:Core/Src/system_clock.c ****   * @brief System Clock Configuration
+  13:Core/Src/system_clock.c ****   * @retval None
+  14:Core/Src/system_clock.c ****   */
+  15:Core/Src/system_clock.c **** void SystemClock_Config(void)
+  16:Core/Src/system_clock.c **** {
+  29              		.loc 1 16 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 152
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 00B5     		push	{lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 4
+  36              		.cfi_offset 14, -4
+  37 0002 A7B0     		sub	sp, sp, #156
+  38              	.LCFI1:
+  39              		.cfi_def_cfa_offset 160
+  17:Core/Src/system_clock.c ****   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  40              		.loc 1 17 3 view .LVU1
+  41              		.loc 1 17 22 is_stmt 0 view .LVU2
+ARM GAS  /tmp/cckIlzlq.s 			page 2
+
+
+  42 0004 2822     		movs	r2, #40
+  43 0006 0021     		movs	r1, #0
+  44 0008 1CA8     		add	r0, sp, #112
+  45 000a FFF7FEFF 		bl	memset
+  46              	.LVL0:
+  18:Core/Src/system_clock.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  47              		.loc 1 18 3 is_stmt 1 view .LVU3
+  48              		.loc 1 18 22 is_stmt 0 view .LVU4
+  49 000e 0021     		movs	r1, #0
+  50 0010 1791     		str	r1, [sp, #92]
+  51 0012 1891     		str	r1, [sp, #96]
+  52 0014 1991     		str	r1, [sp, #100]
+  53 0016 1A91     		str	r1, [sp, #104]
+  54 0018 1B91     		str	r1, [sp, #108]
+  19:Core/Src/system_clock.c ****   RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+  55              		.loc 1 19 3 is_stmt 1 view .LVU5
+  56              		.loc 1 19 28 is_stmt 0 view .LVU6
+  57 001a 5822     		movs	r2, #88
+  58 001c 01A8     		add	r0, sp, #4
+  59 001e FFF7FEFF 		bl	memset
+  60              	.LVL1:
+  20:Core/Src/system_clock.c **** 
+  21:Core/Src/system_clock.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+  22:Core/Src/system_clock.c ****   * in the RCC_OscInitTypeDef structure.
+  23:Core/Src/system_clock.c ****   */
+  24:Core/Src/system_clock.c ****   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  61              		.loc 1 24 3 is_stmt 1 view .LVU7
+  62              		.loc 1 24 36 is_stmt 0 view .LVU8
+  63 0022 0122     		movs	r2, #1
+  64 0024 1C92     		str	r2, [sp, #112]
+  25:Core/Src/system_clock.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  65              		.loc 1 25 3 is_stmt 1 view .LVU9
+  66              		.loc 1 25 30 is_stmt 0 view .LVU10
+  67 0026 4FF48033 		mov	r3, #65536
+  68 002a 1D93     		str	r3, [sp, #116]
+  26:Core/Src/system_clock.c ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  69              		.loc 1 26 3 is_stmt 1 view .LVU11
+  70              		.loc 1 26 30 is_stmt 0 view .LVU12
+  71 002c 1F92     		str	r2, [sp, #124]
+  27:Core/Src/system_clock.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  72              		.loc 1 27 3 is_stmt 1 view .LVU13
+  73              		.loc 1 27 34 is_stmt 0 view .LVU14
+  74 002e 0222     		movs	r2, #2
+  75 0030 2292     		str	r2, [sp, #136]
+  28:Core/Src/system_clock.c ****   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  76              		.loc 1 28 3 is_stmt 1 view .LVU15
+  77              		.loc 1 28 35 is_stmt 0 view .LVU16
+  78 0032 2393     		str	r3, [sp, #140]
+  29:Core/Src/system_clock.c ****   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+  79              		.loc 1 29 3 is_stmt 1 view .LVU17
+  80              		.loc 1 29 32 is_stmt 0 view .LVU18
+  81 0034 4FF4E013 		mov	r3, #1835008
+  82 0038 2493     		str	r3, [sp, #144]
+  30:Core/Src/system_clock.c ****   RCC_OscInitStruct.PLL.PREDIV = RCC_PREDIV_DIV1;
+  83              		.loc 1 30 3 is_stmt 1 view .LVU19
+  31:Core/Src/system_clock.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  84              		.loc 1 31 3 view .LVU20
+ARM GAS  /tmp/cckIlzlq.s 			page 3
+
+
+  85              		.loc 1 31 7 is_stmt 0 view .LVU21
+  86 003a 1CA8     		add	r0, sp, #112
+  87 003c FFF7FEFF 		bl	HAL_RCC_OscConfig
+  88              	.LVL2:
+  89              		.loc 1 31 6 discriminator 1 view .LVU22
+  90 0040 C0B9     		cbnz	r0, .L6
+  91              	.L2:
+  32:Core/Src/system_clock.c ****   {
+  33:Core/Src/system_clock.c ****     Error_Handler();
+  34:Core/Src/system_clock.c ****   }
+  35:Core/Src/system_clock.c **** 
+  36:Core/Src/system_clock.c ****   /** Initializes the CPU, AHB and APB buses clocks
+  37:Core/Src/system_clock.c ****   */
+  38:Core/Src/system_clock.c ****   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+  92              		.loc 1 38 3 is_stmt 1 view .LVU23
+  93              		.loc 1 38 31 is_stmt 0 view .LVU24
+  94 0042 0F23     		movs	r3, #15
+  95 0044 1793     		str	r3, [sp, #92]
+  39:Core/Src/system_clock.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  40:Core/Src/system_clock.c ****   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  96              		.loc 1 40 3 is_stmt 1 view .LVU25
+  97              		.loc 1 40 34 is_stmt 0 view .LVU26
+  98 0046 0221     		movs	r1, #2
+  99 0048 1891     		str	r1, [sp, #96]
+  41:Core/Src/system_clock.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 100              		.loc 1 41 3 is_stmt 1 view .LVU27
+ 101              		.loc 1 41 35 is_stmt 0 view .LVU28
+ 102 004a 0023     		movs	r3, #0
+ 103 004c 1993     		str	r3, [sp, #100]
+  42:Core/Src/system_clock.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+ 104              		.loc 1 42 3 is_stmt 1 view .LVU29
+ 105              		.loc 1 42 36 is_stmt 0 view .LVU30
+ 106 004e 4FF48062 		mov	r2, #1024
+ 107 0052 1A92     		str	r2, [sp, #104]
+  43:Core/Src/system_clock.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 108              		.loc 1 43 3 is_stmt 1 view .LVU31
+ 109              		.loc 1 43 36 is_stmt 0 view .LVU32
+ 110 0054 1B93     		str	r3, [sp, #108]
+  44:Core/Src/system_clock.c **** 
+  45:Core/Src/system_clock.c ****   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+ 111              		.loc 1 45 3 is_stmt 1 view .LVU33
+ 112              		.loc 1 45 7 is_stmt 0 view .LVU34
+ 113 0056 17A8     		add	r0, sp, #92
+ 114 0058 FFF7FEFF 		bl	HAL_RCC_ClockConfig
+ 115              	.LVL3:
+ 116              		.loc 1 45 6 discriminator 1 view .LVU35
+ 117 005c 68B9     		cbnz	r0, .L7
+ 118              	.L3:
+  46:Core/Src/system_clock.c ****   {
+  47:Core/Src/system_clock.c ****     Error_Handler();
+  48:Core/Src/system_clock.c ****   }
+  49:Core/Src/system_clock.c ****   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
+ 119              		.loc 1 49 3 is_stmt 1 view .LVU36
+ 120              		.loc 1 49 38 is_stmt 0 view .LVU37
+ 121 005e 0223     		movs	r3, #2
+ 122 0060 0193     		str	r3, [sp, #4]
+  50:Core/Src/system_clock.c ****   PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
+ARM GAS  /tmp/cckIlzlq.s 			page 4
+
+
+ 123              		.loc 1 50 3 is_stmt 1 view .LVU38
+ 124              		.loc 1 50 38 is_stmt 0 view .LVU39
+ 125 0062 0023     		movs	r3, #0
+ 126 0064 0493     		str	r3, [sp, #16]
+  51:Core/Src/system_clock.c ****   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+ 127              		.loc 1 51 3 is_stmt 1 view .LVU40
+ 128              		.loc 1 51 7 is_stmt 0 view .LVU41
+ 129 0066 01A8     		add	r0, sp, #4
+ 130 0068 FFF7FEFF 		bl	HAL_RCCEx_PeriphCLKConfig
+ 131              	.LVL4:
+ 132              		.loc 1 51 6 discriminator 1 view .LVU42
+ 133 006c 40B9     		cbnz	r0, .L8
+ 134              	.L1:
+  52:Core/Src/system_clock.c ****   {
+  53:Core/Src/system_clock.c ****     Error_Handler();
+  54:Core/Src/system_clock.c ****   }
+  55:Core/Src/system_clock.c **** }
+ 135              		.loc 1 55 1 view .LVU43
+ 136 006e 27B0     		add	sp, sp, #156
+ 137              	.LCFI2:
+ 138              		.cfi_remember_state
+ 139              		.cfi_def_cfa_offset 4
+ 140              		@ sp needed
+ 141 0070 5DF804FB 		ldr	pc, [sp], #4
+ 142              	.L6:
+ 143              	.LCFI3:
+ 144              		.cfi_restore_state
+  33:Core/Src/system_clock.c ****   }
+ 145              		.loc 1 33 5 is_stmt 1 view .LVU44
+ 146 0074 FFF7FEFF 		bl	Error_Handler
+ 147              	.LVL5:
+ 148 0078 E3E7     		b	.L2
+ 149              	.L7:
+  47:Core/Src/system_clock.c ****   }
+ 150              		.loc 1 47 5 view .LVU45
+ 151 007a FFF7FEFF 		bl	Error_Handler
+ 152              	.LVL6:
+ 153 007e EEE7     		b	.L3
+ 154              	.L8:
+  53:Core/Src/system_clock.c ****   }
+ 155              		.loc 1 53 5 view .LVU46
+ 156 0080 FFF7FEFF 		bl	Error_Handler
+ 157              	.LVL7:
+ 158              		.loc 1 55 1 is_stmt 0 view .LVU47
+ 159 0084 F3E7     		b	.L1
+ 160              		.cfi_endproc
+ 161              	.LFE134:
+ 163              		.text
+ 164              	.Letext0:
+ 165              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 166              		.file 3 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stddef.h"
+ 167              		.file 4 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h"
+ 168              		.file 5 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h"
+ 169              		.file 6 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc_ex.h"
+ 170              		.file 7 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/time
+ 171              		.file 8 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/type
+ 172              		.file 9 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos_
+ARM GAS  /tmp/cckIlzlq.s 			page 5
+
+
+ 173              		.file 10 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
+ 174              		.file 11 "Core/Inc/main.h"
+ 175              		.file 12 "<built-in>"
+ARM GAS  /tmp/cckIlzlq.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 system_clock.c
+     /tmp/cckIlzlq.s:21     .text.SystemClock_Config:00000000 $t
+     /tmp/cckIlzlq.s:27     .text.SystemClock_Config:00000000 SystemClock_Config
+
+UNDEFINED SYMBOLS
+memset
+HAL_RCC_OscConfig
+HAL_RCC_ClockConfig
+HAL_RCCEx_PeriphCLKConfig
+Error_Handler
