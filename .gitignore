@@ -3,9 +3,9 @@ ICU-10201/.metadata
 
 # Build outputs
 ICU-10201/Ultrasonic_reader/build/
-semubot_ros2_ws/log/
-semubot_ros2_ws/install/
-semubot_ros2_ws/build/
+*/log/
+*/install/
+*/build/
 
 # ROS2 generated files
 **/__pycache__/
