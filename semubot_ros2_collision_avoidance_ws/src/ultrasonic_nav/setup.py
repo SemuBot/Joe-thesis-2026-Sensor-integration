@@ -18,10 +18,11 @@ setup(
     maintainer='Aleks Jõe',
     maintainer_email='aleksjoe11@gmail.com',
     description='Ultrasonic obstacle avoidance for mecanum drive — ROS 2 Jazzy',
-    license='MIT',
+    license='Apache-2.0',
     entry_points={
         'console_scripts': [
             'obstacle_avoidance_node = ultrasonic_nav.obstacle_avoidance_node:main',
+            'distance_graph_node = ultrasonic_nav.distance_graph_node:main',
         ],
     },
 )

@@ -27,6 +27,14 @@ def generate_launch_description():
         parameters=[params_file],
     )
 
+    graph_node = Node(
+        package='ultrasonic_nav',
+        executable='distance_graph_node',
+        name='distance_graph_node',
+        output='screen',
+        parameters=[params_file],
+    )
+
     def on_agent_output(event):
         global _node_started
         text = event.text.decode('utf-8')
@@ -35,6 +43,7 @@ def generate_launch_description():
             return [
                 LogInfo(msg='Micro-ROS Agent Ready. Starting Obstacle Avoidance...'),
                 obstacle_node,
+                graph_node,
             ]
         return []
 

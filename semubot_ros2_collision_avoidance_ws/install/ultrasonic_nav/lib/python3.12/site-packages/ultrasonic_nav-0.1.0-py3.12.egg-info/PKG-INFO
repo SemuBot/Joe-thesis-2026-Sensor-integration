@@ -1,7 +1,0 @@
-Metadata-Version: 2.1
-Name: ultrasonic-nav
-Version: 0.1.0
-Summary: Ultrasonic obstacle avoidance for mecanum drive — ROS 2 Jazzy
-Maintainer: Aleks Jõe
-Maintainer-email: aleksjoe11@gmail.com
-License: MIT

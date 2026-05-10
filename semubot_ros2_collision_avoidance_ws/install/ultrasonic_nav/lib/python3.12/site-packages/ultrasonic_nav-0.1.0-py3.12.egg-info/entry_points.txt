@@ -1,2 +1,0 @@
-[console_scripts]
-obstacle_avoidance_node = ultrasonic_nav.obstacle_avoidance_node:main

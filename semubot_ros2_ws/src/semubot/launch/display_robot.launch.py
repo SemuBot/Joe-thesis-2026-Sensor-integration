@@ -1,75 +1,59 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.substitutions import Command
+from ament_index_python.packages import get_package_share_path
 import os
 
 def generate_launch_description():
+    pkg = get_package_share_path("semubot")
+    
     urdf_path = os.path.join(
-        os.path.dirname(__file__),
-        '..',
+        pkg,
         'urdf',
-        'semubot.urdf'
+        'semubot.urdf.xacro')
+    
+    rviz_path = os.path.join(
+        pkg,
+        'config',
+        'semubot.rviz')
+
+    robot_description_content = Command(['xacro ', urdf_path])
+
+    # Robot State Publisher
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[
+            {'robot_description': robot_description_content}
+        ]
+    )
+    
+    # Joint State Publisher
+    joint_state_publisher = Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
+        name='joint_state_publisher',
+        output='screen',
+        parameters=[
+            {'robot_description': robot_description_content}
+        ]
     )
 
-    with open(urdf_path, 'r') as inf:
-        robot_description_content = inf.read()
+    # RViz2
+    rviz2 = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+        arguments=[
+            '-d', rviz_path
+        ]
+    )
 
     return LaunchDescription([
-        # Joint State Publisher
-        Node(
-            package='joint_state_publisher',
-            executable='joint_state_publisher',
-            name='joint_state_publisher',
-            output='screen',
-            parameters=[{'robot_description': robot_description_content}, {'source_list': ['/cmd_vel_joint_states']}]
-        ),
-
-        # Robot State Publisher
-       Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            name='robot_state_publisher',
-            output='screen',
-            parameters=[{'robot_description': robot_description_content}]
-        ),
-
-        # RViz2
-        Node(
-            package='rviz2',
-            executable='rviz2',
-            name='rviz2',
-            arguments=['-d', '/home/semubot-laptop/.rviz2/semubot.rviz'],
-            output='screen'
-        ),
-
-        Node(
-	    package='semubot',
-            executable='odom_broadcaster.py',
-            name='odom_broadcaster',
-            output='screen'
-        ),
-
-
-        # CmdVel Publisher - sends fake movement commands
-        Node(
-            package='semubot',
-            executable='cmd_vel_publisher.py',
-            name='cmd_vel_publisher',
-            output='screen'
-        ),
-
-        # CmdVel Serial - sends movement commands to STM32
-        Node(
-            package='semubot',
-            executable='cmd_vel_serial.py',
-            name='cmd_vel_serial',
-            output='screen'
-        ),
-
-        Node(
-            package='semubot',
-            executable='cmd_vel_to_joint_states.py',
-            name='cmd_vel_to_joint_states',
-            output='screen'
-        )
+        robot_state_publisher,
+        joint_state_publisher,
+        rviz2
     ])
-

@@ -5,7 +5,7 @@
   <version>0.0.1</version>
   <description>The semubot package for humanoid robot control, including a URDF model for visualization.</description>
 
-  <maintainer email="omar.2005.22.04@gmail.com">Omar</maintainer>
+  <maintainer email="aleksjoe11@gmail.com">Aleks</maintainer>
 
   <!-- License declaration: Change as needed -->
   <license>Apache-2.0</license>
@@ -14,7 +14,10 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <!-- Runtime dependencies -->
-  <depend>rclcpp</depend>  <!-- ROS2 C++ client library -->
+  <depend>robot_state_publisher</depend>
+  <depend>joint_state_publisher</depend>
+  <depend>xacro</depend>
+  <depend>rviz2</depend>  
   <depend>std_msgs</depend>  <!-- Standard ROS2 messages -->
 
   <export>
