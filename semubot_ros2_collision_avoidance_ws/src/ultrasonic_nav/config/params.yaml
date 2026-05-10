@@ -14,3 +14,19 @@ obstacle_avoidance_node:
 
     max_distance: 1.0
     warn_distance: 0.5
+
+
+bug2_node:
+  ros__parameters:
+    stop_dist:       0.35
+    wall_dist:       0.30
+    wall_tol:        0.05
+    clear_dist:      0.50
+    goal_radius:     0.15
+    mline_tol:       0.08
+
+    fwd_speed:       0.20
+    turn_speed:      0.60
+    wall_fwd_speed:  0.15
+    wall_kp:         1.20
+    heading_kp:      1.00

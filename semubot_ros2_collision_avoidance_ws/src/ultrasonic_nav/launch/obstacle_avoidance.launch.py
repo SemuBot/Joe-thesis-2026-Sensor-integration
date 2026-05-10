@@ -19,10 +19,10 @@ def generate_launch_description():
         output='screen',
     )
 
-    obstacle_node = Node(
+    bug2_node = Node(
         package='ultrasonic_nav',
-        executable='obstacle_avoidance_node',
-        name='obstacle_avoidance_node',
+        executable='bug2_node',
+        name='bug2_node',
         output='screen',
         parameters=[params_file],
     )
@@ -42,7 +42,7 @@ def generate_launch_description():
             _node_started = True
             return [
                 LogInfo(msg='Micro-ROS Agent Ready. Starting Obstacle Avoidance...'),
-                obstacle_node,
+                bug2_node,
                 graph_node,
             ]
         return []

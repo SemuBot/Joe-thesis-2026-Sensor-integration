@@ -17,12 +17,13 @@ setup(
     zip_safe=True,
     maintainer='Aleks Jõe',
     maintainer_email='aleksjoe11@gmail.com',
-    description='Ultrasonic obstacle avoidance for mecanum drive — ROS 2 Jazzy',
+    description='Ultrasonic obstacle avoidance — ROS 2 Jazzy',
     license='Apache-2.0',
     entry_points={
         'console_scripts': [
             'obstacle_avoidance_node = ultrasonic_nav.obstacle_avoidance_node:main',
             'distance_graph_node = ultrasonic_nav.distance_graph_node:main',
+            'bug2_node = ultrasonic_nav.bug2_node:main',
         ],
     },
 )
