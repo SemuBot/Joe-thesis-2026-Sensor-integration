@@ -3,7 +3,7 @@
 <package format="3">
   <name>ultrasonic_nav</name>
   <version>0.1.0</version>
-  <description>Ultrasonic obstacle avoidance for mecanum drive — ROS 2 Jazzy</description>
+  <description>Ultrasonic obstacle avoidance for omni-directional drive — ROS 2 Jazzy</description>
   <maintainer email="aleksjoe11@gmail.com">Aleks Joe</maintainer>
   <license>Apache-2.0</license>
 

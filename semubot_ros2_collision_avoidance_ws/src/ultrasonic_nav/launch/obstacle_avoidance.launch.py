@@ -14,7 +14,7 @@ def generate_launch_description():
     micro_ros_agent = ExecuteProcess(
         cmd=[
             'ros2', 'run', 'micro_ros_agent', 'micro_ros_agent',
-            'serial', '--dev', '/dev/ttyACM0', '-b', '115200', '--reconnect'
+            'serial', '--dev', '/dev/ttyACM1', '-b', '115200', '--reconnect'
         ],
         output='screen',
     )
@@ -35,6 +35,28 @@ def generate_launch_description():
         parameters=[params_file],
     )
 
+    joy_node = Node(
+        package='joy',
+        executable='joy_node',
+        name='joy_node',
+        output='screen',
+    )
+
+    joy_vel_node = Node(
+        package='ultrasonic_nav',
+        executable='joy_vel',
+        name='joy_vel',
+        output='screen',
+        parameters=[{
+            'linear_speed':   0.2,
+            'angular_speed':  0.8,
+            'deadman_button': 6,
+            'axis_linear_x':  1,
+            'axis_linear_y':  0,
+            'axis_angular_z': 2,
+        }],
+    )
+
     def on_agent_output(event):
         global _node_started
         text = event.text.decode('utf-8')
@@ -42,8 +64,8 @@ def generate_launch_description():
             _node_started = True
             return [
                 LogInfo(msg='Micro-ROS Agent Ready. Starting Obstacle Avoidance...'),
-                bug2_node,
-                graph_node,
+                #bug2_node,
+                #graph_node,
             ]
         return []
 
@@ -57,4 +79,6 @@ def generate_launch_description():
     return LaunchDescription([
         micro_ros_agent_ready_handler,
         micro_ros_agent,
+        joy_node,
+        joy_vel_node,
         ])

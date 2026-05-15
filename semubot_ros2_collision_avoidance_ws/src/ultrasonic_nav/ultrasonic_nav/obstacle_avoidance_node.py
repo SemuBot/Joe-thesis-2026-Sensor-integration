@@ -36,6 +36,8 @@ SIDE_SPEED   = 0.20
 TURN_DURATION  = 1.2
 REVERSE_DURATION = 0.8
 
+ROBOT_DIAMETER = 0.40
+
 
 class State(Enum):
     FORWARD = auto()

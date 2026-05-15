@@ -24,6 +24,7 @@ setup(
             'obstacle_avoidance_node = ultrasonic_nav.obstacle_avoidance_node:main',
             'distance_graph_node = ultrasonic_nav.distance_graph_node:main',
             'bug2_node = ultrasonic_nav.bug2_node:main',
+            'joy_vel = ultrasonic_nav.joy_vel:main',
         ],
     },
 )
