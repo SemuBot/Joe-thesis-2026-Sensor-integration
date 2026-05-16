@@ -1,20 +1,4 @@
 #!/usr/bin/env python3
-"""
-Bug2 Navigation Node — ROS 2 Jazzy
-Robot:   Mecanum / omnidirectional drive
-
-State machine:
-    IDLE            → waiting for a goal
-    FORWARD         → drive toward goal, strafe away if obstacle still close
-    ASSESS_LEFT     → turn 90° CCW, read middle sensor
-    ASSESS_RIGHT    → turn 90° CW from origin, read middle sensor
-    ASSESS_RETURN   → return to original heading, decide wall side
-    BOUNDARY_TURN   → rotate until side sensor matches hit distance
-    BOUNDARY_DRIVE  → P controller holds side sensor at hit distance
-                      exit when side sensor clears (back edge)
-    BOUNDARY_RETURN → turn back toward goal
-    GOAL_REACHED    → stop
-"""
 
 import rclpy
 from rclpy.node import Node

@@ -27,6 +27,14 @@ def generate_launch_description():
         parameters=[params_file],
     )
 
+    obstacle_avoidance_node = Node(
+        package='ultrasonic_nav',
+        executable='obstacle_avoidance_node',
+        name='obstacle_avoidance_node',
+        output='screen',
+        parameters=[params_file],
+    )
+
     graph_node = Node(
         package='ultrasonic_nav',
         executable='distance_graph_node',
@@ -42,19 +50,12 @@ def generate_launch_description():
         output='screen',
     )
 
-    joy_vel_node = Node(
+    joy_vel = Node(
         package='ultrasonic_nav',
         executable='joy_vel',
         name='joy_vel',
         output='screen',
-        parameters=[{
-            'linear_speed':   0.2,
-            'angular_speed':  0.8,
-            'deadman_button': 6,
-            'axis_linear_x':  1,
-            'axis_linear_y':  0,
-            'axis_angular_z': 2,
-        }],
+        parameters=[params_file],
     )
 
     def on_agent_output(event):
@@ -65,6 +66,7 @@ def generate_launch_description():
             return [
                 LogInfo(msg='Micro-ROS Agent Ready. Starting Obstacle Avoidance...'),
                 #bug2_node,
+                obstacle_avoidance_node,
                 #graph_node,
             ]
         return []
@@ -79,6 +81,4 @@ def generate_launch_description():
     return LaunchDescription([
         micro_ros_agent_ready_handler,
         micro_ros_agent,
-        joy_node,
-        joy_vel_node,
         ])

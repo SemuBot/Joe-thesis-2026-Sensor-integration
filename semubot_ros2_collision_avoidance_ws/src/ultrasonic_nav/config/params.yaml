@@ -1,21 +1,24 @@
 obstacle_avoidance_node:
   ros__parameters:
+    stop_dist:          0.55
+    clear_dist:         1.00
+    reverse_dist:       0.20
+    fwd_speed:          0.25
+    turn_speed:         0.80
+    reverse_duration:   0.80
+    robot_diameter:     0.80
+ 
+    kp:                 0.80
+    ki:                 0.15
+    ki_max:             0.30
+ 
+    wall_lost_dist:     0.5
+    wall_corridor_dist: 0.25
 
-    stop_dist:       0.40
-    clear_dist:      0.55
-    reverse_dist:    0.20
+    sensor_timeout:     0.5
 
-    fwd_speed:       0.25
-    turn_speed:      0.80
-    strafe_speed:    0.20
 
-    turn_duration:    1.20
-    reverse_duration: 0.80
-
-    max_distance: 1.0
-    warn_distance: 0.5
-
-joy_vel_node:
+joy_vel:
   ros__parameters:
     linear_speed:   0.3
     angular_speed:  0.8
