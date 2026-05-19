@@ -35,24 +35,24 @@ Both firmware variants publish three `sensor_msgs/msg/Range` topics — `ultraso
 ```
 Joe-thesis-2026-Sensor-integration/
 ├── HC-SR04/
-│   └── Ultrasonic_reader_/          # STM32CubeIDE project — HC-SR04 firmware
+│   └── Ultrasonic_reader_/
 │       ├── Common/                  # Sensor driver (hcsr04.c/h, measurement.c/h)
 │       ├── Core/                    # HAL init, main loop, micro-ROS publisher
-│       ├── Drivers/                 # STM32F3xx HAL + CMSIS
-│       ├── Middlewares/             # FreeRTOS source
-│       ├── Ultrasonic_reader.ioc    # CubeMX pin/peripheral configuration
+│       ├── Drivers/
+│       ├── Middlewares/
+│       ├── Ultrasonic_reader.ioc
 │       └── flash.sh                 # st-flash helper script
 ├── ICU-10201/
-│   └── Ultrasonic_reader/           # STM32CubeIDE project — ICU-10201 firmware
-│       ├── Common/                  # Sensor abstraction (sensor.c/h, obstacle_detection.c/h)
+│   └── Ultrasonic_reader/
+│       ├── Common/                  # Sensor specific definitions (sensor.c/h, obstacle_detection.c/h)
 │       ├── Core/                    # HAL init, main loop, micro-ROS publisher
 │       ├── Soniclib/                # TDK InvenSense SonicLib driver library
 │       ├── bsp/                     # Board support package (chirp_stm32.c)
-│       ├── Ultrasonic_reader.ioc    # CubeMX pin/peripheral configuration
+│       ├── Ultrasonic_reader.ioc
 │       └── flash.sh                 # st-flash helper script
 ├── semubot_ros2_collision_avoidance_ws/
 │   └── src/
-│       └── ultrasonic_nav/          # ROS 2 Python package
+│       └── ultrasonic_nav/
 │           ├── ultrasonic_nav/
 │           │   ├── obstacle_avoidance_node.py   # Reactive avoidance (state machine)
 │           │   ├── bug2_node.py                 # Bug2 goal-directed navigation
@@ -74,7 +74,7 @@ Joe-thesis-2026-Sensor-integration/
 - **STM32CubeIDE** (for firmware programming and building)
 - **st-flash** / ST-Link programmer
 - **ROS 2 Jazzy** on the main computer
-- **Python 3** with 'rclpy', 'sensor_msgs', 'geometry_msgs', 'nav_msgs'
+- **Python 3** with `rclpy`, `sensor_msgs`, `geometry_msgs`, `nav_msgs`
 - **Ansible** (optional, for automated micro-ROS agent setup)
 
 ---
@@ -88,12 +88,14 @@ Joe-thesis-2026-Sensor-integration/
 
 Ansible playbook automates building and installing micro-ROS agent from 'https://github.com/micro-ROS/micro_ros_setup' on the Raspberry Pi running ROS2 Jazzy.
 
-``` ansible-playbook micro_ros_agent_setup.yml ```
+```ansible-playbook micro_ros_agent_setup.yml```
 
 Micro-ROS agent alias is automatically added to '~/.bashrc'. To start the agent manually:
 
-```source ~/micro-ros_ws/install/local_setup.bash
-ros2 run micro_ros_agent micro_ros_agent serial --dev /dev/ttyACM1 -b 115200 --reconnect```
+```
+source ~/micro-ros_ws/install/local_setup.bash
+ros2 run micro_ros_agent micro_ros_agent serial --dev /dev/ttyACM1 -b 115200 --reconnect
+```
 
 ---
 
@@ -111,10 +113,12 @@ Both sensor variants use the same build procedure.
 
 ### 4. Build the ROS2 workspace
 
-```cd semubot_ros2_collision_avoidance_ws
+```
+cd semubot_ros2_collision_avoidance_ws
 source /opt/ros/jazzy/setup.bash
 colcon build --symlink-install
-source install/setup.bash```
+source install/setup.bash
+```
 
 ---
 
