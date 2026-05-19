@@ -80,7 +80,7 @@ Joe-thesis-2026-Sensor-integration/
 ---
 
 ### 1. Clone the repositoriy
-''' git clone https://github.com/SemuBot/Joe-thesis-2026-Sensor-integration.git'''
+```git clone https://github.com/SemuBot/Joe-thesis-2026-Sensor-integration.git```
 
 ---
 
@@ -88,12 +88,12 @@ Joe-thesis-2026-Sensor-integration/
 
 Ansible playbook automates building and installing micro-ROS agent from 'https://github.com/micro-ROS/micro_ros_setup' on the Raspberry Pi running ROS2 Jazzy.
 
-''' ansible-playbook micro_ros_agent_setup.yml '''
+``` ansible-playbook micro_ros_agent_setup.yml ```
 
 Micro-ROS agent alias is automatically added to '~/.bashrc'. To start the agent manually:
 
-'''source ~/micro-ros_ws/install/local_setup.bash
-ros2 run micro_ros_agent micro_ros_agent serial --dev /dev/ttyACM1 -b 115200 --reconnect'''
+```source ~/micro-ros_ws/install/local_setup.bash
+ros2 run micro_ros_agent micro_ros_agent serial --dev /dev/ttyACM1 -b 115200 --reconnect```
 
 ---
 
@@ -111,26 +111,26 @@ Both sensor variants use the same build procedure.
 
 ### 4. Build the ROS2 workspace
 
-'''cd semubot_ros2_collision_avoidance_ws
+```cd semubot_ros2_collision_avoidance_ws
 source /opt/ros/jazzy/setup.bash
 colcon build --symlink-install
-source install/setup.bash'''
+source install/setup.bash```
 
 ---
 
 ### 5. Launch
 
 The launch file start the micro-ROS serial agend and automatically start the obstacle_avoidance_node.
-'''ros2 launch ultrasonic_nav obstacle_avoidance.launch.py'''
+```ros2 launch ultrasonic_nav obstacle_avoidance.launch.py```
 
 This launches:
-- 'micro_ros_agent'
-- 'obstacle_avoidance_node'
+- `micro_ros_agent`
+- `obstacle_avoidance_node`
 
 Optional_nodes:
-- 'bug2_node' - Goal oriented Bug2 navigation.
-- 'distance_graph_node' - real-time sensor distance plot.
-- 'joy_node' + 'joy_vel' - joystick operation with safety override.
+- `bug2_node` - Goal oriented Bug2 navigation.
+- `distance_graph_node` - real-time sensor distance plot.
+- `joy_node` + `joy_vel` - joystick operation with safety override.
 
 ## License
 
